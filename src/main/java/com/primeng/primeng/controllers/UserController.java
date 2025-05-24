@@ -108,6 +108,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
             }
             User user = userOptional.get();
+            userService.cargarMenu(user);
             ResponseApi<UserDto> response = new ResponseApi<>(this.title, "OK", "Usuario encontrado", new UserDto(user), this.date);
             return ResponseEntity.ok(response);
         }catch (Exception e) {

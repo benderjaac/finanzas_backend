@@ -20,12 +20,9 @@ public class PerfilDTO {
 
 
         if (perfil.getMenu() != null) {
-            System.out.println("PerfilDTO: Construyendo menu del perfil con " + perfil.getMenu().size() + " elementos");
             this.menu = perfil.getMenu().stream()
                     .map(PermisoDTO::new)
                     .collect(Collectors.toList());
-        } else {
-            System.out.println("PerfilDTO:: Menu nulo para perfil ID " + perfil.getId());
         }
     }
 

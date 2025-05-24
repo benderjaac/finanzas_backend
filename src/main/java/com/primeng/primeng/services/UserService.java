@@ -40,14 +40,6 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public Perfil getPermisosByUser(User user) {
-        Perfil perfil = user.getPerfil();
-        if (perfil != null) {
-            perfil.getPermisos().size(); // Forzar carga de permisos
-        }
-        return perfil;
-    }
-
     public User cargarPermisos(User user) {
         if (user.getPerfil() != null) {
            Set<Permiso> permisos = perfilService.getPermisosPorPerfil(user.getPerfil().getId());

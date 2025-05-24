@@ -28,16 +28,12 @@ public class PerfilService {
         Optional<Perfil> perfil = perfilRepository.findById(perfilId);
         Set<Permiso> permisosVisibles = perfil.get().getPermisos();
 
-        System.out.println("PerfilService: Permisos encontrados del perfil: " + permisosVisibles.size());
-
         // Mapeo para construir jerarquía
         Map<Long, Permiso> map = new HashMap<>();
         for (Permiso permiso : permisosVisibles) {
             permiso.setHijos(new ArrayList<>()); // evitar datos residuales
             map.put(permiso.getId(), permiso);
         }
-
-        System.out.println("PerfilService: Despues del mapeo" + permisosVisibles.size());
 
         List<Permiso> menuRaiz = new ArrayList<>();
 
@@ -50,11 +46,6 @@ public class PerfilService {
             } else {
                 menuRaiz.add(permiso);
             }
-        }
-
-        System.out.println("PerfilService: Permisos raíz encontrados: " + menuRaiz.size());
-        for (Permiso p : menuRaiz) {
-            System.out.println("PerfilService: Raíz: " + p.getNombre() + " hijos: " + p.getHijos().size());
         }
 
         return menuRaiz;

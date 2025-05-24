@@ -32,8 +32,6 @@ public class PermisoDTO {
         // Recursivamente mapear los hijos
         if (permiso.getHijos() != null && !permiso.getHijos().isEmpty()) {
 
-            System.out.println("PermisoDTO: Permiso " + this.nombre + " tiene hijos: " + permiso.getHijos().size());
-
             this.hijos = permiso.getHijos().stream()
                     .map(PermisoDTO::new)
                     .collect(Collectors.toList());
