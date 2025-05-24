@@ -1,0 +1,62 @@
+package com.primeng.primeng.services;
+
+import com.primeng.primeng.models.Gasto;
+import com.primeng.primeng.models.Perfil;
+import com.primeng.primeng.models.Permiso;
+import com.primeng.primeng.repositories.PerfilRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+@Service
+public class PerfilService {
+    @Autowired
+    private PerfilRepository perfilRepository;
+
+    public Optional<Perfil> getPerfilById(Long id) {
+        return perfilRepository.findById(id);
+    }
+
+    public Set<Permiso> getPermisosPorPerfil(Long perfilId) {
+        Optional<Perfil> perfil = perfilRepository.findById(perfilId);
+        return perfil.map(Perfil::getPermisos).orElse(Collections.emptySet());
+    }
+
+    public List<Permiso> getMenuEstructuradoPorPerfil(Long perfilId) {
+        // Consulta permisos visibles directamente del repositorio
+        Optional<Perfil> perfil = perfilRepository.findById(perfilId);
+        Set<Permiso> permisosVisibles = perfil.get().getPermisos();
+
+        System.out.println("PerfilService: Permisos encontrados del perfil: " + permisosVisibles.size());
+
+        // Mapeo para construir jerarquía
+        Map<Long, Permiso> map = new HashMap<>();
+        for (Permiso permiso : permisosVisibles) {
+            permiso.setHijos(new ArrayList<>()); // evitar datos residuales
+            map.put(permiso.getId(), permiso);
+        }
+
+        System.out.println("PerfilService: Despues del mapeo" + permisosVisibles.size());
+
+        List<Permiso> menuRaiz = new ArrayList<>();
+
+        for (Permiso permiso : permisosVisibles) {
+            if (permiso.getPadre() != null) {
+                Permiso padre = map.get(permiso.getPadre().getId());
+                if (padre != null) {
+                    padre.getHijos().add(permiso);
+                }
+            } else {
+                menuRaiz.add(permiso);
+            }
+        }
+
+        System.out.println("PerfilService: Permisos raíz encontrados: " + menuRaiz.size());
+        for (Permiso p : menuRaiz) {
+            System.out.println("PerfilService: Raíz: " + p.getNombre() + " hijos: " + p.getHijos().size());
+        }
+
+        return menuRaiz;
+    }
+}

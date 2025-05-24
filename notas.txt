@@ -1,0 +1,9 @@
+Para generar .jar
+mvnw.cmd clean package -DskipTests
+
+
+http://localhost:8080/auth/register
+regresar token y usuario con perfil
+asignar un perfil por default
+
+crear tabla de submenus
