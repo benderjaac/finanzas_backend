@@ -1,13 +1,17 @@
 package com.primeng.primeng.services;
 
-import com.primeng.primeng.models.Perfil;
+import com.primeng.primeng.dto.UserDto;
 import com.primeng.primeng.models.Permiso;
+import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.repositories.UserRepository;
+import com.primeng.primeng.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -19,6 +23,12 @@ public class UserService {
 
     @Autowired
     private PerfilService perfilService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    private String title="Usuarios";
+    private Date date = new Date();
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -54,5 +64,14 @@ public class UserService {
             user.getPerfil().setMenu(menuEstructurado);
         }
         return user;
+    }
+
+    public ResponseApi getUserToken(String token){
+        String username = jwtUtil.extractUsername(token);
+        Optional<User> userOptional = this.getUserByUsername(username);
+
+        User user = userOptional.get();
+        this.cargarMenu(user);
+        return new ResponseApi<>(this.title, "OK", "Usuario encontrado", new UserDto(user), this.date);
     }
 }

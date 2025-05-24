@@ -1,10 +1,7 @@
 package com.primeng.primeng.controllers;
 
-import com.primeng.primeng.dto.UserDto;
-import com.primeng.primeng.models.Gasto;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.User;
-import com.primeng.primeng.security.JwtUtil;
 import com.primeng.primeng.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +15,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
-//@CrossOrigin(origins = "http://localhost:4200") // permite solo desde Angular
 public class UserController {
     private String title="Usuarios";
     private Date date = new Date();
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     @GetMapping
     public ResponseEntity<ResponseApi<List<User>>> getAllUsers() {
@@ -98,22 +91,8 @@ public class UserController {
         }
 
         String token = authHeader.substring(7);
+        ResponseApi response = userService.getUserToken(token);
+        return ResponseEntity.ok(response);
 
-        try {
-            String username = jwtUtil.extractUsername(token);
-            Optional<User> userOptional = userService.getUserByUsername(username);
-
-            if(userOptional.isEmpty()){
-                ResponseApi<String> response = new ResponseApi<>(this.title,"ERROR", "Usuario no encontrado", null, this.date);
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-            }
-            User user = userOptional.get();
-            userService.cargarMenu(user);
-            ResponseApi<UserDto> response = new ResponseApi<>(this.title, "OK", "Usuario encontrado", new UserDto(user), this.date);
-            return ResponseEntity.ok(response);
-        }catch (Exception e) {
-            ResponseApi<String> response = new ResponseApi<>(this.title, "ERROR", "Usuario no encontrado", null, this.date);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        }
     }
 }
