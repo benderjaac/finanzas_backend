@@ -1,6 +1,7 @@
 package com.primeng.primeng.services;
 
 import com.primeng.primeng.dto.UserDto;
+import com.primeng.primeng.dto.UserSimpleDto;
 import com.primeng.primeng.models.Permiso;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.User;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -28,8 +30,10 @@ public class UserService {
     private String title="Usuarios";
     private Date date = new Date();
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserSimpleDto> getAllUsersSimple() {
+        return userRepository.findAll().stream()
+                .map(UserSimpleDto::new)
+                .collect(Collectors.toList());
     }
 
     public Optional<User> getUserById(Long id) {

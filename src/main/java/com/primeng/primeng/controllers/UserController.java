@@ -1,5 +1,6 @@
 package com.primeng.primeng.controllers;
 
+import com.primeng.primeng.dto.UserSimpleDto;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.services.UserService;
@@ -22,9 +23,11 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<ResponseApi<List<User>>> getAllUsers() {
-        List<User> user = userService.getAllUsers();
-        ResponseApi<List<User>> response = new ResponseApi<>(this.title, "OK", "Información encontrada", user, this.date);
+    public ResponseEntity<ResponseApi<List<UserSimpleDto>>> getAllUsers() {
+        List<UserSimpleDto> users = userService.getAllUsersSimple();
+        ResponseApi<List<UserSimpleDto>> response = new ResponseApi<>(
+                this.title, "OK", "Información encontrada", users, this.date
+        );
         return ResponseEntity.ok(response);
     }
 

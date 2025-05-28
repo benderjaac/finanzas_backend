@@ -2,25 +2,21 @@ package com.primeng.primeng.dto;
 
 import com.primeng.primeng.models.User;
 
-public class UserDto {
+public class UserSimpleDto {
     private Long id;
     private String username;
     private String email;
-    private PerfilDTO perfil;
+    private Long perfil_id;
+    private String perfilNombre;
 
-    public UserDto(User user) {
+
+    public UserSimpleDto(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
-        if (user.getPerfil() != null) {
-            this.perfil = new PerfilDTO(user.getPerfil());
-        }
+        this.perfil_id=user.getPerfil().getId();
+        this.perfilNombre = user.getPerfil() != null ? user.getPerfil().getNombre() : null;
     }
-
-    public UserDto() {
-    }
-
-    // Getters y setters
 
     public Long getId() {
         return id;
@@ -46,11 +42,11 @@ public class UserDto {
         this.email = email;
     }
 
-    public PerfilDTO getPerfil() {
-        return perfil;
+    public String getPerfilNombre() {
+        return perfilNombre;
     }
 
-    public void setPerfil(PerfilDTO perfil) {
-        this.perfil = perfil;
+    public void setPerfilNombre(String perfilNombre) {
+        this.perfilNombre = perfilNombre;
     }
 }
