@@ -1,6 +1,8 @@
 package com.primeng.primeng.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 public class Perfil {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,44 +33,4 @@ public class Perfil {
 
     @Transient
     private List<Permiso> menu;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescri() {
-        return descri;
-    }
-
-    public void setDescri(String descri) {
-        this.descri = descri;
-    }
-
-    public Set<Permiso> getPermisos() {
-        return permisos;
-    }
-
-    public void setPermisos(Set<Permiso> permisos) {
-        this.permisos = permisos;
-    }
-
-    public List<Permiso> getMenu() {
-        return menu;
-    }
-
-    public void setMenu(List<Permiso> menu) {
-        this.menu = menu;
-    }
 }

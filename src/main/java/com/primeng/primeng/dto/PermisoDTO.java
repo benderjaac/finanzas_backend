@@ -1,11 +1,15 @@
 package com.primeng.primeng.dto;
 
 import com.primeng.primeng.models.Permiso;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class PermisoDTO {
     private Long id;
     private String nombre;
@@ -40,77 +44,5 @@ public class PermisoDTO {
     }
 
     public PermisoDTO() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    public String getDescri() {
-        return descri;
-    }
-
-    public void setDescri(String descri) {
-        this.descri = descri;
-    }
-
-    public Long getPadre_id() {
-        return padre_id;
-    }
-
-    public void setPadre_id(Long padre_id) {
-        this.padre_id = padre_id;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public List<PermisoDTO> getHijos() {
-        return hijos;
-    }
-
-    public void setHijos(List<PermisoDTO> hijos) {
-        this.hijos = hijos;
     }
 }

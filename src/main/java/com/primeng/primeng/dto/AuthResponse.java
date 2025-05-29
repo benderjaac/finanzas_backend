@@ -1,7 +1,11 @@
 package com.primeng.primeng.dto;
 
 import com.primeng.primeng.models.User;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class AuthResponse {
     private String token;
     private UserDto user;
@@ -9,21 +13,5 @@ public class AuthResponse {
     public AuthResponse(String token, UserDto userdto) {
         this.token = token;
         this.user = userdto;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public UserDto getUser() {
-        return user;
-    }
-
-    public void setUser(UserDto user) {
-        this.user = user;
     }
 }

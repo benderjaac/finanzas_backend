@@ -1,7 +1,12 @@
 package com.primeng.primeng.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
+@Getter
+@Setter
 public class ResponseApi<T> {
     private String title;
     private String status;
@@ -16,48 +21,6 @@ public class ResponseApi<T> {
         this.status = status;
         this.message = message;
         this.data = data;
-        this.timestamp = timestamp;
-    }
-
-    // Getters y setters
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public Date gettimestamp() {
-        return timestamp;
-    }
-
-    public void settimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 }

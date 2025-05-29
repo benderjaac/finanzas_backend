@@ -1,10 +1,14 @@
 package com.primeng.primeng.dto;
 
 import com.primeng.primeng.models.Perfil;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class PerfilDTO {
     private Long id;
     private String nombre;
@@ -27,37 +31,5 @@ public class PerfilDTO {
     }
 
     public PerfilDTO() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescri() {
-        return descri;
-    }
-
-    public void setDescri(String descri) {
-        this.descri = descri;
-    }
-
-    public List<PermisoDTO> getMenu() {
-        return menu;
-    }
-
-    public void setMenu(List<PermisoDTO> menu) {
-        this.menu = menu;
     }
 }
