@@ -5,6 +5,9 @@ import com.primeng.primeng.dto.UserSimpleDto;
 import com.primeng.primeng.models.Permiso;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.User;
+import com.primeng.primeng.models.db.Query;
+import com.primeng.primeng.models.db.Result;
+import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.repositories.UserRepository;
 import com.primeng.primeng.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +28,23 @@ public class UserService {
     private PerfilService perfilService;
 
     @Autowired
+    private DBRepository db;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
     private String title="Usuarios";
     private Date date = new Date();
+
+    public Result<UserSimpleDto> findAllSimple(Query query){
+        Result<User> result = db.findAll(User.class, query);
+        List<UserSimpleDto> dtoList = result.getData().stream()
+                .map(UserSimpleDto::new)
+                .collect(Collectors.toList());
+        return new Result<UserSimpleDto>(dtoList, result.getPagination());
+
+        //return db.findAll(User.class, query);
+    }
 
     public List<UserSimpleDto> getAllUsersSimple() {
         return userRepository.findAll().stream()

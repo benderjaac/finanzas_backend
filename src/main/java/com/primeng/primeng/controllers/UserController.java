@@ -3,7 +3,11 @@ package com.primeng.primeng.controllers;
 import com.primeng.primeng.dto.UserSimpleDto;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.User;
+import com.primeng.primeng.models.db.Query;
+import com.primeng.primeng.models.response.HttpOk;
 import com.primeng.primeng.services.UserService;
+import com.primeng.primeng.util.Response;
+import com.primeng.primeng.util.Type;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +21,22 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
     private String title="Usuarios";
     private Date date = new Date();
+
+    private Response response = new Response(Type.USUARIO);
+
     @Autowired
     private UserService userService;
+
+    @PostMapping("/data")
+    public ResponseEntity<HttpOk> findAll(
+            HttpServletRequest request,
+            @RequestBody Query query
+    ) {
+        return response.find(userService.findAllSimple(query));
+    }
 
     @GetMapping
     public ResponseEntity<ResponseApi<List<UserSimpleDto>>> getAllUsers() {
