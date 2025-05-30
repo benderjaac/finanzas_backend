@@ -1,6 +1,10 @@
 package com.primeng.primeng.services;
 
 import com.primeng.primeng.models.Gasto;
+import com.primeng.primeng.models.User;
+import com.primeng.primeng.models.db.Query;
+import com.primeng.primeng.models.db.Result;
+import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.repositories.GastoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +17,13 @@ public class GastoService {
 
     @Autowired
     private GastoRepository gastoRepository;
+
+    @Autowired
+    private DBRepository db;
+
+    public Result<Gasto> findAll(Query query){
+        return db.findAll(Gasto.class, query);
+    }
 
     public List<Gasto> getAllGastos() {
         return gastoRepository.findAll();

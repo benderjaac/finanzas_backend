@@ -2,7 +2,13 @@ package com.primeng.primeng.controllers;
 
 import com.primeng.primeng.models.Gasto;
 import com.primeng.primeng.models.ResponseApi;
+import com.primeng.primeng.models.db.Query;
+import com.primeng.primeng.models.response.HttpOk;
+import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.services.GastoService;
+import com.primeng.primeng.util.Response;
+import com.primeng.primeng.util.Type;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +27,19 @@ public class GastoController {
 
     @Autowired
     private GastoService gastoService;
+
+    @Autowired
+    private DBRepository db;
+
+    private Response response = new Response(Type.GASTO);
+
+    @PostMapping("/data")
+    public ResponseEntity<HttpOk> findAll(
+        HttpServletRequest request,
+        @RequestBody Query query
+    ){
+        return response.find(gastoService.findAll(query));
+    }
 
     @GetMapping
     public ResponseEntity<ResponseApi<List<Gasto>>> getAllGastos(){

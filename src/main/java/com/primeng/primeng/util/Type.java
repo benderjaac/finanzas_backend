@@ -3,6 +3,7 @@ package com.primeng.primeng.util;
 public enum Type {
 
     USUARIO("Usuario", "Id Usuario"),
+    GASTO("Gasto", "Id Gasto"),
     ;
 
     private String display;

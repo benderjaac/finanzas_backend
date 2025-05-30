@@ -44,12 +44,6 @@ public class UserService {
         return new Result<UserSimpleDto>(dtoList, result.getPagination());
     }
 
-    public List<UserSimpleDto> getAllUsersSimple() {
-        return userRepository.findAll().stream()
-                .map(UserSimpleDto::new)
-                .collect(Collectors.toList());
-    }
-
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }

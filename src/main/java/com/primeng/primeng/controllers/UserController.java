@@ -38,15 +38,6 @@ public class UserController {
         return response.find(userService.findAllSimple(query));
     }
 
-    @GetMapping
-    public ResponseEntity<ResponseApi<List<UserSimpleDto>>> getAllUsers() {
-        List<UserSimpleDto> users = userService.getAllUsersSimple();
-        ResponseApi<List<UserSimpleDto>> response = new ResponseApi<>(
-                this.title, "OK", "Información encontrada", users, this.date
-        );
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ResponseApi<User>> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);
