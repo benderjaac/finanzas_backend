@@ -34,4 +34,5 @@ public class Permiso {
     @ManyToMany(mappedBy = "permisos")
     private Set<Perfil> perfiles = new HashSet<>();
 
+    private Integer orden;
 }

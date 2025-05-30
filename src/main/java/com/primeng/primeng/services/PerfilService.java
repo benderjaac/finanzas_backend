@@ -18,15 +18,10 @@ public class PerfilService {
         return perfilRepository.findById(id);
     }
 
-    public Set<Permiso> getPermisosPorPerfil(Long perfilId) {
-        Optional<Perfil> perfil = perfilRepository.findById(perfilId);
-        return perfil.map(Perfil::getPermisos).orElse(Collections.emptySet());
-    }
-
     public List<Permiso> getMenuEstructuradoPorPerfil(Long perfilId) {
         // Consulta permisos visibles directamente del repositorio
         Optional<Perfil> perfil = perfilRepository.findById(perfilId);
-        Set<Permiso> permisosVisibles = perfil.get().getPermisos();
+        List<Permiso> permisosVisibles = perfil.get().getPermisos();
 
         // Mapeo para construir jerarquía
         Map<Long, Permiso> map = new HashMap<>();

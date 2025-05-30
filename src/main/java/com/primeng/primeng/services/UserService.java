@@ -68,14 +68,6 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User cargarPermisos(User user) {
-        if (user.getPerfil() != null) {
-           Set<Permiso> permisos = perfilService.getPermisosPorPerfil(user.getPerfil().getId());
-           user.getPerfil().setPermisos(permisos);
-        }
-        return user;
-    }
-
     public User cargarMenu(User user) {
         if (user.getPerfil() != null) {
             List<Permiso> menuEstructurado  = perfilService.getMenuEstructuradoPorPerfil(user.getPerfil().getId());

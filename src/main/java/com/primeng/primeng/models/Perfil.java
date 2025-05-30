@@ -29,7 +29,8 @@ public class Perfil {
             joinColumns = @JoinColumn(name = "perfil_id"),
             inverseJoinColumns = @JoinColumn(name = "permiso_id")
     )
-    private Set<Permiso> permisos = new HashSet<>();
+    @OrderBy("orden ASC")
+    private List<Permiso> permisos;
 
     @Transient
     private List<Permiso> menu;
