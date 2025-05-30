@@ -42,8 +42,6 @@ public class UserService {
                 .map(UserSimpleDto::new)
                 .collect(Collectors.toList());
         return new Result<UserSimpleDto>(dtoList, result.getPagination());
-
-        //return db.findAll(User.class, query);
     }
 
     public List<UserSimpleDto> getAllUsersSimple() {

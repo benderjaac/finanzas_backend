@@ -68,9 +68,20 @@ public class DBRepository {
         // Order By
         List<Order> orderBy = new ArrayList<>();
         for (Sort sort : query.getSorter()) {
+            String[] path = sort.getField().split("\\.");
+            Path<?> expression = root;
+
+            // Hacemos join por cada parte excepto la última
+            for (int i = 0; i < path.length - 1; i++) {
+                expression = ((From<?, ?>) expression).join(path[i], JoinType.LEFT);
+            }
+
+            // Tomamos el campo final
+            Path<?> finalField = expression.get(path[path.length - 1]);
+
             switch (sort.getOrder().toLowerCase()) {
-                case "asc" -> orderBy.add(cb.asc(root.get(sort.getField())));
-                case "desc" -> orderBy.add(cb.desc(root.get(sort.getField())));
+                case "asc" -> orderBy.add(cb.asc(finalField));
+                case "desc" -> orderBy.add(cb.desc(finalField));
                 default -> throw new BadRequestException("Order no valido. " + sort);
             }
         }
@@ -103,7 +114,7 @@ public class DBRepository {
                             case "nlk", "nlk_", "_nlk", "_nlk_" -> literal = literal.replace("nlk", value);
                             default -> throw new BadRequestException("Operator no valido. " + filter);
                         }
-                        Expression<String> keyUnaccent = cb.function("unaccent", String.class, root.get(field));
+                        Expression<String> keyUnaccent = cb.function("unaccent", String.class, resolvePath(root, field));
                         Expression<String> keyUpper = cb.function("upper", String.class, keyUnaccent);
                         Expression<String> valUnaccent = cb.function("unaccent", String.class, cb.literal(literal));
                         Expression<String> valUpper = cb.function("upper", String.class, valUnaccent);
@@ -119,40 +130,43 @@ public class DBRepository {
                             throw new BadRequestException("Value no valido: Número requerido. " + filter);
                         }
                         Integer numero = Integer.parseInt(value);
+                        Path<Integer> path = (Path<Integer>) resolvePath(root, field);
                         switch (operator) {
-                            case "=" -> predicate = cb.and(predicate, cb.equal(root.get(field), numero));
-                            case "<" -> predicate = cb.and(predicate, cb.lessThan(root.get(field), numero));
-                            case ">" -> predicate = cb.and(predicate, cb.greaterThan(root.get(field), numero));
-                            case "<=" -> predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get(field), numero));
+                            case "=" -> predicate = cb.and(predicate, cb.equal(path, numero));
+                            case "<" -> predicate = cb.and(predicate, cb.lessThan(path, numero));
+                            case ">" -> predicate = cb.and(predicate, cb.greaterThan(path, numero));
+                            case "<=" -> predicate = cb.and(predicate, cb.lessThanOrEqualTo(path, numero));
                             case ">=" ->
-                                    predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.get(field), numero));
-                            case "!=" -> predicate = cb.and(predicate, cb.notEqual(root.get(field), numero));
+                                    predicate = cb.and(predicate, cb.greaterThanOrEqualTo(path, numero));
+                            case "!=" -> predicate = cb.and(predicate, cb.notEqual(resolvePath(root, field), numero));
                             default -> throw new BadRequestException("Operator no valido. " + filter);
                         }
                     }
                     // DATE
                     case "date" -> {
                         Date fecha = value.length() == 10 ? Fecha.fromIsoDate(value) : Fecha.fromIsoDateTime(value);
+                        Path<Date> path = (Path<Date>) resolvePath(root, field);
                         switch (operator) {
-                            case "=" -> predicate = cb.and(predicate, cb.equal(root.get(field), fecha));
-                            case "<" -> predicate = cb.and(predicate, cb.lessThan(root.get(field), fecha));
-                            case ">" -> predicate = cb.and(predicate, cb.greaterThan(root.get(field), fecha));
-                            case "<=" -> predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get(field), fecha));
-                            case ">=" -> predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.get(field), fecha));
-                            case "!=" -> predicate = cb.and(predicate, cb.notEqual(root.get(field), fecha));
+                            case "=" -> predicate = cb.and(predicate, cb.equal(path, fecha));
+                            case "<" -> predicate = cb.and(predicate, cb.lessThan(path, fecha));
+                            case ">" -> predicate = cb.and(predicate, cb.greaterThan(path, fecha));
+                            case "<=" -> predicate = cb.and(predicate, cb.lessThanOrEqualTo(path, fecha));
+                            case ">=" -> predicate = cb.and(predicate, cb.greaterThanOrEqualTo(path, fecha));
+                            case "!=" -> predicate = cb.and(predicate, cb.notEqual(path, fecha));
                             default -> throw new BadRequestException("Operator no valido. " + filter);
                         }
                     }
                     // TIME
                     case "time" -> {
                         LocalTime hora = LocalTime.parse(value);
+                        Path<LocalTime> path = (Path<LocalTime>) resolvePath(root, field);
                         switch (operator) {
-                            case "=" -> predicate = cb.and(predicate, cb.equal(root.get(field), hora));
-                            case "<" -> predicate = cb.and(predicate, cb.lessThan(root.get(field), hora));
-                            case ">" -> predicate = cb.and(predicate, cb.greaterThan(root.get(field), hora));
-                            case "<=" -> predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get(field), hora));
-                            case ">=" -> predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.get(field), hora));
-                            case "!=" -> predicate = cb.and(predicate, cb.notEqual(root.get(field), hora));
+                            case "=" -> predicate = cb.and(predicate, cb.equal(path, hora));
+                            case "<" -> predicate = cb.and(predicate, cb.lessThan(path, hora));
+                            case ">" -> predicate = cb.and(predicate, cb.greaterThan(path, hora));
+                            case "<=" -> predicate = cb.and(predicate, cb.lessThanOrEqualTo(path, hora));
+                            case ">=" -> predicate = cb.and(predicate, cb.greaterThanOrEqualTo(path, hora));
+                            case "!=" -> predicate = cb.and(predicate, cb.notEqual(resolvePath(root, field), hora));
                             default -> throw new BadRequestException("Operator no válido. " + filter);
                         }
                     }
@@ -160,7 +174,7 @@ public class DBRepository {
                     case "boolean" -> {
                         if (operator.equals("=")) {
                             if (value.equals("true") || value.equals("false")) {
-                                predicate = cb.and(predicate, cb.equal(root.get(field), Boolean.parseBoolean(value)));
+                                predicate = cb.and(predicate, cb.equal(resolvePath(root, field), Boolean.parseBoolean(value)));
                             } else {
                                 throw new BadRequestException("Value no valido: Boleano requerido. " + filter);
                             }
@@ -172,8 +186,8 @@ public class DBRepository {
                     case "isnull" -> {
                         if (operator.equals("=")) {
                             switch (value) {
-                                case "true" -> predicate = cb.and(predicate, cb.isNull(root.get(field)));
-                                case "false" -> predicate = cb.and(predicate, cb.isNotNull(root.get(field)));
+                                case "true" -> predicate = cb.and(predicate, cb.isNull(resolvePath(root, field)));
+                                case "false" -> predicate = cb.and(predicate, cb.isNotNull(resolvePath(root, field)));
                                 default ->
                                         throw new BadRequestException("Value no valido: Boleano requerido. " + filter);
                             }
@@ -187,8 +201,8 @@ public class DBRepository {
                             ObjectMapper mapper = new ObjectMapper();
                             Object[] values = mapper.readValue(value, Object[].class);
                             switch (operator) {
-                                case "in" -> predicate = cb.and(predicate, root.get(field).in(values));
-                                case "notin" -> predicate = cb.and(predicate, root.get(field).in(values).not());
+                                case "in" -> predicate = cb.and(predicate, resolvePath(root, field).in(values));
+                                case "notin" -> predicate = cb.and(predicate, resolvePath(root, field).in(values).not());
                                 default -> throw new BadRequestException("Operator no valido. " + filter);
                             }
                         } catch (JsonProcessingException e) {
@@ -216,5 +230,14 @@ public class DBRepository {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    private Path<?> resolvePath(Root<?> root, String fieldPath) {
+        String[] parts = fieldPath.split("\\.");
+        Path<?> path = root;
+        for (String part : parts) {
+            path = (path instanceof From<?, ?> from) ? from.get(part) : path.get(part);
+        }
+        return path;
     }
 }
