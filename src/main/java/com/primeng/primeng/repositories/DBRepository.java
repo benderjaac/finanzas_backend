@@ -166,7 +166,7 @@ public class DBRepository {
                             case ">" -> predicate = cb.and(predicate, cb.greaterThan(path, hora));
                             case "<=" -> predicate = cb.and(predicate, cb.lessThanOrEqualTo(path, hora));
                             case ">=" -> predicate = cb.and(predicate, cb.greaterThanOrEqualTo(path, hora));
-                            case "!=" -> predicate = cb.and(predicate, cb.notEqual(resolvePath(root, field), hora));
+                            case "!=" -> predicate = cb.and(predicate, cb.notEqual(path, hora));
                             default -> throw new BadRequestException("Operator no válido. " + filter);
                         }
                     }
