@@ -1,7 +1,11 @@
 package com.primeng.primeng.dto;
 
 import com.primeng.primeng.models.User;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class UserSimpleDto {
     private Long id;
     private String username;
@@ -16,37 +20,5 @@ public class UserSimpleDto {
         this.email = user.getEmail();
         this.perfil_id=user.getPerfil().getId();
         this.perfilNombre = user.getPerfil() != null ? user.getPerfil().getNombre() : null;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPerfilNombre() {
-        return perfilNombre;
-    }
-
-    public void setPerfilNombre(String perfilNombre) {
-        this.perfilNombre = perfilNombre;
     }
 }

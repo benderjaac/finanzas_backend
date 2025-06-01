@@ -43,7 +43,8 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<HttpOk> getUserById(
         HttpServletRequest request,
-        @PathVariable Long id)
+        @PathVariable Long id
+    )
     {
         return response.find(userService.getUserById(id));
     }
