@@ -38,29 +38,14 @@ public class UserController {
         return response.find(userService.findAllSimple(query));
     }
 
+
+
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseApi<User>> getUserById(@PathVariable Long id) {
-        Optional<User> user = userService.getUserById(id);
-
-        if (user.isEmpty()) {
-            ResponseApi<User> response = new ResponseApi<>(
-                    this.title,
-                    "ERROR",
-                    "Información no encontrada",
-                    null,
-                    this.date
-            );
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
-
-        ResponseApi<User> response = new ResponseApi<>(
-                this.title,
-                "OK",
-                "Información encontrada",
-                user.get(),
-                this.date
-        );
-        return ResponseEntity.ok(response);
+    public ResponseEntity<HttpOk> getUserById(
+        HttpServletRequest request,
+        @PathVariable Long id)
+    {
+        return response.find(userService.getUserById(id));
     }
 
     @PostMapping

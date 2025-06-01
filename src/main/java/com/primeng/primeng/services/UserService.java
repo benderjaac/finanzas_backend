@@ -2,6 +2,7 @@ package com.primeng.primeng.services;
 
 import com.primeng.primeng.dto.UserDto;
 import com.primeng.primeng.dto.UserSimpleDto;
+import com.primeng.primeng.exceptions.NotFoundException;
 import com.primeng.primeng.models.Permiso;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.User;
@@ -10,6 +11,7 @@ import com.primeng.primeng.models.db.Result;
 import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.repositories.UserRepository;
 import com.primeng.primeng.security.JwtUtil;
+import com.primeng.primeng.util.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,8 +46,9 @@ public class UserService {
         return new Result<UserSimpleDto>(dtoList, result.getPagination());
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public UserSimpleDto getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.USUARIO, id));
+        return new UserSimpleDto(user);
     }
 
     public Optional<User> getUserByUsername(String username){
