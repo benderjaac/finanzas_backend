@@ -39,7 +39,7 @@ public class UserService {
     private Date date = new Date();
 
     public Result<UserSimpleDto> findAllSimple(Query query){
-        Result<User> result = db.findAll(User.class, query);
+        Result<User> result = db.findAll(User.class, query, false);
         List<UserSimpleDto> dtoList = result.getData().stream()
                 .map(UserSimpleDto::new)
                 .collect(Collectors.toList());

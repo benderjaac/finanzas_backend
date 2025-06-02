@@ -22,7 +22,7 @@ public class GastoService {
     private DBRepository db;
 
     public Result<Gasto> findAll(Query query){
-        return db.findAll(Gasto.class, query);
+        return db.findAll(Gasto.class, query, true);
     }
 
     public List<Gasto> getAllGastos() {

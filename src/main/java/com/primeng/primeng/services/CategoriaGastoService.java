@@ -25,7 +25,7 @@ public class CategoriaGastoService {
     private DBRepository db;
 
     public Result<CategoriaGastoDTO> findAll(Query query){
-        Result<CategoriaGasto> result = db.findAll(CategoriaGasto.class, query);
+        Result<CategoriaGasto> result = db.findAll(CategoriaGasto.class, query, true);
         List<CategoriaGastoDTO> resultList = result.getData().stream()
                 .map(CategoriaGastoDTO::new)
                 .collect(Collectors.toList());

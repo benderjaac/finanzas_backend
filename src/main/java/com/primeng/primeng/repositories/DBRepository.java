@@ -4,27 +4,36 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.primeng.primeng.exceptions.AppException;
 import com.primeng.primeng.exceptions.BadRequestException;
+import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.*;
+import com.primeng.primeng.security.CustomUserDetails;
 import com.primeng.primeng.util.Fecha;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class DBRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public <T> Result<T> findAll(Class<T> cls, Query query) {
+    @Autowired UserRepository userRepository;
+
+    public <T> Result<T> findAll(Class<T> cls, Query query, boolean byUser) {
         Result<T> result = new Result<>();
         Pagination pagination = query.getPagination();
-        long totalItems = count(cls, query);
+        long totalItems = count(cls, query, byUser);
         int totalPages = 1;
         if (!query.isDisabledPagination()) {
             totalPages = (int) Math.ceil((double) totalItems / pagination.getPerPage());
@@ -42,28 +51,28 @@ public class DBRepository {
             return result;
         }
         // Data
-        result.setData(find(cls, query));
+        result.setData(find(cls, query, byUser));
         return result;
     }
 
-    public <T> Long count(Class<T> cls, Query query) {
+    public <T> Long count(Class<T> cls, Query query, boolean byUser) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cr = cb.createQuery(Long.class);
         Root<T> root = cr.from(cls);
         cr.select(cb.count(root));
         // Where
-        Predicate predicate = where(query, cb, root);
+        Predicate predicate = where(query, cb, root, byUser);
         cr.where(predicate);
         // Result
         return entityManager.createQuery(cr).getSingleResult();
     }
 
-    private <T> List<T> find(Class<T> cls, Query query) {
+    private <T> List<T> find(Class<T> cls, Query query, boolean byUser) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> cr = cb.createQuery(cls);
         Root<T> root = cr.from(cls);
         // Where
-        Predicate predicate = where(query, cb, root);
+        Predicate predicate = where(query, cb, root, byUser);
         cr.where(predicate);
         // Order By
         List<Order> orderBy = new ArrayList<>();
@@ -97,7 +106,7 @@ public class DBRepository {
         }
     }
 
-    private <T> Predicate where(Query query, CriteriaBuilder cb, Root<T> root) {
+    private <T> Predicate where(Query query, CriteriaBuilder cb, Root<T> root, boolean byUser) {
         Predicate predicate = cb.conjunction();
         for (Filter filter : query.getFilters()) {
             String type = filter.getType();
@@ -217,6 +226,11 @@ public class DBRepository {
                 throw new BadRequestException("Valores no validos. " + filter);
             }
         }
+
+        if (byUser) {
+            Long usuarioId = getIdUser();
+            predicate = cb.and(predicate, cb.equal(root.get("usuario").get("id"), usuarioId));
+        }
         return predicate;
     }
 
@@ -239,5 +253,15 @@ public class DBRepository {
             path = (path instanceof From<?, ?> from) ? from.get(part) : path.get(part);
         }
         return path;
+    }
+
+    public Long getIdUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            throw new BadRequestException("autenticacion requerida");
+        }
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return userDetails.getId();
+
     }
 }
