@@ -24,19 +24,17 @@ public class Gasto {
     @Column(nullable = false)
     private Float monto;
 
-    @Column(nullable = false)
-    private Long idusuario;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private User usuario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id")
+    private CategoriaGasto categoria;
 
     @Column(nullable = false)
     private Boolean contado;
 
     public Gasto(){}
 
-    public Gasto(Date fecha, String descri, Float monto, Long idusuario) {
-        this.fecha = fecha;
-        this.descri = descri;
-        this.monto = monto;
-        this.idusuario = idusuario;
-        this.contado=false;
-    }
 }

@@ -1,5 +1,8 @@
 package com.primeng.primeng.services;
 
+import com.primeng.primeng.dto.CategoriaGastoDTO;
+import com.primeng.primeng.dto.GastoDTO;
+import com.primeng.primeng.models.CategoriaGasto;
 import com.primeng.primeng.models.Gasto;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.Query;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GastoService {
@@ -21,8 +25,12 @@ public class GastoService {
     @Autowired
     private DBRepository db;
 
-    public Result<Gasto> findAll(Query query){
-        return db.findAll(Gasto.class, query, true);
+    public Result<GastoDTO> findAll(Query query){
+        Result<Gasto> result =  db.findAll(Gasto.class, query, true);
+        List<GastoDTO> resultList =  result.getData().stream()
+                .map(GastoDTO::new)
+                .collect(Collectors.toList());
+        return new Result<GastoDTO>(resultList, result.getPagination());
     }
 
     public List<Gasto> getAllGastos() {

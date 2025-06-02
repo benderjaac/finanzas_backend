@@ -26,7 +26,7 @@ public class CategoriaGasto {
     @Column(nullable = false)
     private Boolean visible;
 
-    @Column(nullable = false)
+    @Column
     private String color;
 
     @Column
