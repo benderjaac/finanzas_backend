@@ -2,6 +2,7 @@ package com.primeng.primeng.services;
 
 import com.primeng.primeng.dto.UserDto;
 import com.primeng.primeng.dto.UserSimpleDto;
+import com.primeng.primeng.exceptions.BadRequestException;
 import com.primeng.primeng.exceptions.NotFoundException;
 import com.primeng.primeng.models.Permiso;
 import com.primeng.primeng.models.ResponseApi;
@@ -10,9 +11,13 @@ import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.db.Result;
 import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.repositories.UserRepository;
+import com.primeng.primeng.security.CustomUserDetails;
 import com.primeng.primeng.security.JwtUtil;
 import com.primeng.primeng.util.Type;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -46,17 +51,18 @@ public class UserService {
         return new Result<UserSimpleDto>(dtoList, result.getPagination());
     }
 
-    public UserSimpleDto getUserById(Long id) {
+    public UserSimpleDto getUserSimpleById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.USUARIO, id));
         return new UserSimpleDto(user);
     }
 
-    public Optional<User> getUserByUsername(String username){
-        return userRepository.findByUsername(username);
+    public User getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.USUARIO, id));
+        return user;
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserSimpleDto createUser(User user) {
+        return new UserSimpleDto(userRepository.save(user));
     }
 
     public void deleteUser(Long id) {
@@ -79,4 +85,10 @@ public class UserService {
         this.cargarMenu(user);
         return new ResponseApi<>(this.title, "OK", "Usuario encontrado", new UserDto(user), this.date);
     }
+
+    public Optional<User> getUserByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
+
+
 }

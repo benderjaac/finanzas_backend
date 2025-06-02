@@ -1,10 +1,14 @@
 package com.primeng.primeng.controllers;
 
+import com.primeng.primeng.dto.UserDto;
 import com.primeng.primeng.dto.UserSimpleDto;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.response.HttpOk;
+import com.primeng.primeng.security.CustomUserDetails;
+import com.primeng.primeng.services.AuthService;
+import com.primeng.primeng.services.CustomUserDetailsService;
 import com.primeng.primeng.services.UserService;
 import com.primeng.primeng.util.Response;
 import com.primeng.primeng.util.Type;
@@ -22,13 +26,13 @@ import java.util.Optional;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private String title="Usuarios";
-    private Date date = new Date();
-
     private Response response = new Response(Type.USUARIO);
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/data")
     public ResponseEntity<HttpOk> findAll(
@@ -38,57 +42,31 @@ public class UserController {
         return response.find(userService.findAllSimple(query));
     }
 
-
-
     @GetMapping("/{id}")
     public ResponseEntity<HttpOk> getUserById(
         HttpServletRequest request,
         @PathVariable Long id
     )
     {
-        return response.find(userService.getUserById(id));
+        return response.find(userService.getUserSimpleById(id));
     }
 
     @PostMapping
-    public ResponseEntity<ResponseApi<User>> createUser(@RequestBody User user) {
-        User newUser =  userService.createUser(user);
-        ResponseApi<User> response = new ResponseApi<>(
-                this.title,
-                "OK",
-                "Usuario creado exitosamente",
-                newUser,
-                this.date
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<HttpOk> createUser(@RequestBody User user) {
+        UserSimpleDto newUser =  userService.createUser(user);
+        return response.create(newUser.getId().toString(), newUser);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseApi> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<HttpOk> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        ResponseApi<User> response = new ResponseApi<>(
-                this.title,
-                "OK",
-                "Usuario eliminado exitosamente",
-                null,
-                this.date
-        );
-
-        return ResponseEntity.ok(response);
+        return response.delete(id.toString());
     }
 
     @GetMapping("/me")
-    public ResponseEntity<ResponseApi<?>> getCurrentUser(HttpServletRequest request){
-        String authHeader = request.getHeader("Authorization");
-
-        if(authHeader == null || !authHeader.startsWith("Bearer ")){
-            ResponseApi<String> response = new ResponseApi<>(this.title, "ERROR", "Autenticacion requerida", null, this.date);
-           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        }
-
-        String token = authHeader.substring(7);
-        ResponseApi response = userService.getUserToken(token);
-        return ResponseEntity.ok(response);
-
+    public ResponseEntity<HttpOk> getCurrentUser(HttpServletRequest request){
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        User user = userService.getUserById(usuario.getId());
+        return response.find(new UserDto(userService.cargarMenu(user)));
     }
 }

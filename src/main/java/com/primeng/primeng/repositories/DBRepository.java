@@ -7,6 +7,9 @@ import com.primeng.primeng.exceptions.BadRequestException;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.*;
 import com.primeng.primeng.security.CustomUserDetails;
+import com.primeng.primeng.services.AuthService;
+import com.primeng.primeng.services.CustomUserDetailsService;
+import com.primeng.primeng.services.UserService;
 import com.primeng.primeng.util.Fecha;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -29,6 +32,9 @@ public class DBRepository {
     private EntityManager entityManager;
 
     @Autowired UserRepository userRepository;
+
+    @Autowired
+    CustomUserDetailsService customUserDetailsService;
 
     public <T> Result<T> findAll(Class<T> cls, Query query, boolean byUser) {
         Result<T> result = new Result<>();
@@ -228,8 +234,9 @@ public class DBRepository {
         }
 
         if (byUser) {
-            Long usuarioId = getIdUser();
-            predicate = cb.and(predicate, cb.equal(root.get("usuario").get("id"), usuarioId));
+
+            CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+            predicate = cb.and(predicate, cb.equal(root.get("usuario").get("id"), usuario.getId()));
         }
         return predicate;
     }
@@ -255,13 +262,5 @@ public class DBRepository {
         return path;
     }
 
-    public Long getIdUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-            throw new BadRequestException("autenticacion requerida");
-        }
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        return userDetails.getId();
 
-    }
 }

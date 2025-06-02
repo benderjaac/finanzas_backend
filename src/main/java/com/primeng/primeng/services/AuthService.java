@@ -1,16 +1,20 @@
 package com.primeng.primeng.services;
 
 import com.primeng.primeng.dto.UserDto;
+import com.primeng.primeng.exceptions.BadRequestException;
 import com.primeng.primeng.models.Perfil;
+import com.primeng.primeng.security.CustomUserDetails;
 import com.primeng.primeng.security.JwtUtil;
 import com.primeng.primeng.dto.AuthRequest;
 import com.primeng.primeng.dto.AuthResponse;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -68,4 +72,6 @@ public class AuthService {
         String token = jwtUtil.generateToken(request.getUsername());
         return new AuthResponse(token, new UserDto(user));
     }
+
+
 }
