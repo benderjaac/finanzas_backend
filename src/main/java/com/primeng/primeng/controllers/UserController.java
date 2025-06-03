@@ -2,25 +2,18 @@ package com.primeng.primeng.controllers;
 
 import com.primeng.primeng.dto.UserDto;
 import com.primeng.primeng.dto.UserSimpleDto;
-import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.response.HttpOk;
 import com.primeng.primeng.security.CustomUserDetails;
-import com.primeng.primeng.services.AuthService;
 import com.primeng.primeng.services.CustomUserDetailsService;
 import com.primeng.primeng.services.UserService;
 import com.primeng.primeng.util.Response;
 import com.primeng.primeng.util.Type;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -43,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HttpOk> getUserById(
+    public ResponseEntity<HttpOk> getUserSimpleById(
         HttpServletRequest request,
         @PathVariable Long id
     )
