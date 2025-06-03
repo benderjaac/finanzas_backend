@@ -52,6 +52,14 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public void updateUser(Long id, User user){
+        User userActual = getUserById(id);
+        userActual.setPerfil(user.getPerfil());
+        userActual.setEmail(user.getEmail());
+        userActual.setUsername(user.getUsername());
+        userRepository.save(userActual);
+    }
+
     public User cargarMenu(User user) {
         if (user.getPerfil() != null) {
             List<Permiso> menuEstructurado  = perfilService.getMenuEstructuradoPorPerfil(user.getPerfil().getId());

@@ -1,5 +1,7 @@
 package com.primeng.primeng.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.primeng.primeng.models.response.HttpError;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
@@ -15,10 +17,19 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint  {
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException)
-             throws IOException {
+            throws IOException {
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+        System.out.println("🔒 Auth Entry Point ejecutado");
+
+        HttpError error = new HttpError(
+                "No autenticado",
+                authException.getMessage(),
+                request.getRequestURI(),
+                HttpServletResponse.SC_UNAUTHORIZED
+        );
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
-        response.getWriter().write("{\"error\": \"Credenciales inválidas\"}");
+        new ObjectMapper().writeValue(response.getOutputStream(), error);
     }
 }

@@ -13,6 +13,7 @@ import com.primeng.primeng.util.Type;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,6 +28,7 @@ public class UserController {
     @Autowired
     CustomUserDetailsService customUserDetailsService;
 
+    @PreAuthorize("hasAuthority('user_select')")
     @PostMapping("/data")
     public ResponseEntity<HttpOk> findAll(
             HttpServletRequest request,
@@ -35,6 +37,7 @@ public class UserController {
         return response.find(userService.findAllSimple(query));
     }
 
+    @PreAuthorize("hasAuthority('user_select')")
     @GetMapping("/{id}")
     public ResponseEntity<HttpOk> getUserSimpleById(
         HttpServletRequest request,
@@ -44,16 +47,25 @@ public class UserController {
         return response.find(userService.getUserSimpleById(id));
     }
 
+    @PreAuthorize("hasAuthority('user_insert')")
     @PostMapping
     public ResponseEntity<HttpOk> createUser(@RequestBody User user) {
         UserSimpleDto newUser =  userService.createUser(user);
         return response.create(newUser.getId().toString(), newUser);
     }
 
+    @PreAuthorize("hasAuthority('user_delete')")
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpOk> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return response.delete(id.toString());
+    }
+
+    @PreAuthorize("hasAuthority('user_update')")
+    @PutMapping("/{id}")
+    public ResponseEntity<HttpOk> updateUser(@PathVariable Long id, @RequestBody User user){
+        userService.updateUser(id, user);
+        return response.update(id.toString());
     }
 
     @GetMapping("/me")
