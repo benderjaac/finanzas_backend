@@ -1,11 +1,9 @@
 package com.primeng.primeng.exceptions;
 
-import com.primeng.primeng.models.response.HttpError;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -15,19 +13,24 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Map<String, Object>> handleBadRequestException(BadRequestException ex, HttpServletRequest request) {
-        Map<String, Object> error = new HashMap<>();
-        error.put("timestamp", LocalDateTime.now());
-        error.put("status", HttpStatus.BAD_REQUEST.value());
-        error.put("error", "Bad Request");
-        error.put("message", ex.getMessage());
-        error.put("path", request.getRequestURI());
-
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<?> handleDeserializationError(HttpMessageNotReadableException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(Map.of(
+                        "title", "Error al leer el JSON",
+                        "message", ex.getMostSpecificCause().getMessage()
+                ));
     }
 
-    // Puedes agregar más excepciones personalizadas aquí, por ejemplo:
-    // @ExceptionHandler(NotFoundException.class)
-    // ...
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleGeneric(Exception ex) {
+        ex.printStackTrace(); // útil mientras desarrollas
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of(
+                        "title", "Error inesperado",
+                        "message", ex.getMessage()
+                ));
+    }
 }

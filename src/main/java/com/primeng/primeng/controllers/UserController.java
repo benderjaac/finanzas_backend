@@ -1,5 +1,6 @@
 package com.primeng.primeng.controllers;
 
+import com.primeng.primeng.dto.UserCreateDto;
 import com.primeng.primeng.dto.UserDto;
 import com.primeng.primeng.dto.UserSimpleDto;
 import com.primeng.primeng.models.User;
@@ -49,7 +50,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('user_insert')")
     @PostMapping
-    public ResponseEntity<HttpOk> createUser(@RequestBody User user) {
+    public ResponseEntity<HttpOk> createUser(@RequestBody UserCreateDto user) {
         UserSimpleDto newUser =  userService.createUser(user);
         return response.create(newUser.getId().toString(), newUser);
     }
