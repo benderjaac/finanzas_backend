@@ -14,9 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 
-    @EntityGraph(attributePaths = "perfil")
-    List<User> findAll();
-
     @Query("SELECT u FROM User u " +
             "JOIN FETCH u.perfil p " +
             "JOIN FETCH p.permisos " +

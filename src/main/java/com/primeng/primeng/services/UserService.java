@@ -40,6 +40,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public Result<UserSimpleDto> findAllSimple(Query query){
+        query.addFetch("perfil");
         Result<User> result = db.findAll(User.class, query, false);
         List<UserSimpleDto> dtoList = result.getData().stream()
                 .map(UserSimpleDto::new)

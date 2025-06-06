@@ -25,6 +25,14 @@ public class Query {
     @Valid
     private Pagination pagination = new Pagination();
 
+    private List<String> fetchRelations = new ArrayList<>();
+
+    public void addFetch(String relation) {
+        if (!fetchRelations.contains(relation)) {
+            fetchRelations.add(relation);
+        }
+    }
+
     public Query(String key, String operator, String value) {
         addFilter(key, operator, value, "string");
     }

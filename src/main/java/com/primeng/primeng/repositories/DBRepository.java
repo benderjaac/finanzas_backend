@@ -77,6 +77,11 @@ public class DBRepository {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> cr = cb.createQuery(cls);
         Root<T> root = cr.from(cls);
+
+        //agregar Joins
+        for (String relation : query.getFetchRelations()) {
+            root.fetch(relation, JoinType.LEFT);
+        }
         // Where
         Predicate predicate = where(query, cb, root, byUser);
         cr.where(predicate);
