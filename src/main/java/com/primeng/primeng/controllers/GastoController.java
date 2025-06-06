@@ -1,5 +1,9 @@
 package com.primeng.primeng.controllers;
 
+import com.primeng.primeng.dto.GastoCreateDTO;
+import com.primeng.primeng.dto.GastoDTO;
+import com.primeng.primeng.dto.UserCreateDto;
+import com.primeng.primeng.dto.UserSimpleDto;
 import com.primeng.primeng.models.Gasto;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.db.Query;
@@ -12,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -33,6 +38,7 @@ public class GastoController {
 
     private Response response = new Response(Type.GASTO);
 
+    @PreAuthorize("hasAuthority('gasto_select')")
     @PostMapping("/data")
     public ResponseEntity<HttpOk> findAll(
         HttpServletRequest request,
@@ -41,50 +47,23 @@ public class GastoController {
         return response.find(gastoService.findAll(query));
     }
 
-    @GetMapping
-    public ResponseEntity<ResponseApi<List<Gasto>>> getAllGastos(){
-        List<Gasto> gastos = gastoService.getAllGastos();
-        ResponseApi<List<Gasto>> response = new ResponseApi<>(this.title, "OK", "Información encontrada", gastos, this.date);
-        return ResponseEntity.ok(response);
-    }
-
+    @PreAuthorize("hasAuthority('gasto_select')")
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseApi<Gasto>> getGastoById(@PathVariable Long id) {
-        Optional<Gasto> gasto = gastoService.getGastoById(id);
-        if(gasto.isEmpty()){
-            ResponseApi<Gasto> response = new ResponseApi<>(
-                    this.title,
-                    "ERROR",
-                    "Información no encontrada",
-                    null,
-                    this.date
-            );
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
-
-        ResponseApi<Gasto> response = new ResponseApi<>(
-                this.title,
-                "OK",
-                "Información encontrada",
-                gasto.get(),
-                this.date
-        );
-        return ResponseEntity.ok(response);
+    public ResponseEntity<HttpOk> getGastoById(
+            HttpServletRequest request,
+            @PathVariable Long id)
+    {
+        return response.find(gastoService.getGastoById(id));
     }
 
+    @PreAuthorize("hasAuthority('gasto_insert')")
     @PostMapping
-    public ResponseEntity<ResponseApi<Gasto>> createGasto(@RequestBody Gasto gasto) {
-        Gasto gastoNew = gastoService.createGasto(gasto);
-        ResponseApi<Gasto> response = new ResponseApi<>(
-                this.title,
-                "OK",
-                "Creado exitosamente",
-                gastoNew,
-                this.date
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<HttpOk> createGasto(@RequestBody GastoCreateDTO gasto) {
+        GastoDTO newGasto =  gastoService.createGasto(gasto);
+        return response.create(newGasto.getId().toString(), newGasto);
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseApi> deleteGasto(@PathVariable Long id) {
@@ -100,21 +79,6 @@ public class GastoController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseApi<Gasto>> actualizarGasto(@PathVariable Long id, @RequestBody Gasto gasto) {
-        Optional<Gasto> gastoActualizar = gastoService.getGastoById(id);
-        if(gastoActualizar.isEmpty()){
-            ResponseApi<Gasto> response = new ResponseApi<>(
-                    this.title,
-                    "ERROR",
-                    "Información no encontrada",
-                    null,
-                    this.date
-            );
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
-        Gasto actualizado = gastoService.updateGasto(id, gasto);
-        return ResponseEntity.ok(new ResponseApi<>(this.title, "OK", "Actualizado correctamente", actualizado, this.date));
-    }
+
 
 }

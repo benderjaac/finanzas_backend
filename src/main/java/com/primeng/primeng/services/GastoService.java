@@ -1,14 +1,23 @@
 package com.primeng.primeng.services;
 
 import com.primeng.primeng.dto.CategoriaGastoDTO;
+import com.primeng.primeng.dto.GastoCreateDTO;
 import com.primeng.primeng.dto.GastoDTO;
+import com.primeng.primeng.dto.UserSimpleDto;
+import com.primeng.primeng.exceptions.BadRequestException;
+import com.primeng.primeng.exceptions.NotFoundException;
 import com.primeng.primeng.models.CategoriaGasto;
 import com.primeng.primeng.models.Gasto;
+import com.primeng.primeng.models.Perfil;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.db.Result;
+import com.primeng.primeng.repositories.CategoriaGastoRepository;
 import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.repositories.GastoRepository;
+import com.primeng.primeng.repositories.UserRepository;
+import com.primeng.primeng.security.CustomUserDetails;
+import com.primeng.primeng.util.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +32,16 @@ public class GastoService {
     private GastoRepository gastoRepository;
 
     @Autowired
+    private CategoriaGastoRepository categoriaGastoRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
     private DBRepository db;
+
+    @Autowired
+    CustomUserDetailsService customUserDetailsService;
 
     public Result<GastoDTO> findAll(Query query){
         query.addFetch("categoria");
@@ -34,16 +52,34 @@ public class GastoService {
         return new Result<>(resultList, result.getPagination());
     }
 
-    public List<Gasto> getAllGastos() {
-        return gastoRepository.findAll();
+    public GastoDTO getGastoById(Long id) {
+        Gasto gasto = gastoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.USUARIO, id));
+        return new GastoDTO(gasto);
     }
 
-    public Optional<Gasto> getGastoById(Long id) {
-        return gastoRepository.findById(id);
-    }
+    public GastoDTO createGasto(GastoCreateDTO gastodto) {
+        // Validación de datos mínimos
+        if (gastodto.getCategoriaId() == null) {
+            throw new BadRequestException("El ID de la categoria es obligatorio");
+        }
 
-    public Gasto createGasto(Gasto gasto) {
-        return gastoRepository.save(gasto);
+        // Buscar la categoria
+        CategoriaGasto catGasto = categoriaGastoRepository.findById(gastodto.getCategoriaId())
+                .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
+
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        User userEntity = userService.getUserById(usuario.getId());
+
+        // Crear entidad Gasto
+        Gasto gasto = new Gasto();
+        gasto.setDescri(gastodto.getDescri());
+        gasto.setFecha(gastodto.getFecha());
+        gasto.setMonto(gastodto.getMonto());
+        gasto.setContado(false);
+        gasto.setUsuario(userEntity);
+        gasto.setCategoria(catGasto);
+
+        return new GastoDTO(gastoRepository.save(gasto));
     }
 
     public Gasto updateGasto(Long id, Gasto nuevoGasto){
