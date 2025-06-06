@@ -29,7 +29,7 @@ public class CategoriaGastoService {
         List<CategoriaGastoDTO> resultList = result.getData().stream()
                 .map(CategoriaGastoDTO::new)
                 .collect(Collectors.toList());
-        return new Result<CategoriaGastoDTO>(resultList, result.getPagination());
+        return new Result<>(resultList, result.getPagination());
     }
 
     public CategoriaGastoDTO getByID(Long id){

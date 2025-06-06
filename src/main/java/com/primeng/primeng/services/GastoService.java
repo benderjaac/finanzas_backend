@@ -26,11 +26,12 @@ public class GastoService {
     private DBRepository db;
 
     public Result<GastoDTO> findAll(Query query){
+        query.addFetch("categoria");
         Result<Gasto> result =  db.findAll(Gasto.class, query, true);
         List<GastoDTO> resultList =  result.getData().stream()
                 .map(GastoDTO::new)
                 .collect(Collectors.toList());
-        return new Result<GastoDTO>(resultList, result.getPagination());
+        return new Result<>(resultList, result.getPagination());
     }
 
     public List<Gasto> getAllGastos() {
