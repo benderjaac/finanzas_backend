@@ -2,6 +2,8 @@ package com.primeng.primeng.services;
 
 import com.primeng.primeng.dto.UserCreateDto;
 import com.primeng.primeng.dto.UserSimpleDto;
+import com.primeng.primeng.exceptions.AppException;
+import com.primeng.primeng.exceptions.BadRequestException;
 import com.primeng.primeng.exceptions.NotFoundException;
 import com.primeng.primeng.models.Perfil;
 import com.primeng.primeng.models.Permiso;
@@ -42,7 +44,7 @@ public class UserService {
         List<UserSimpleDto> dtoList = result.getData().stream()
                 .map(UserSimpleDto::new)
                 .collect(Collectors.toList());
-        return new Result<UserSimpleDto>(dtoList, result.getPagination());
+        return new Result<>(dtoList, result.getPagination());
     }
 
     public UserSimpleDto getUserSimpleById(Long id) {
@@ -51,18 +53,17 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.USUARIO, id));
-        return user;
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.USUARIO, id));
     }
 
     public UserSimpleDto createUser(UserCreateDto userdto) {
         // Validación de datos mínimos
         if (userdto.getPerfilId() == null) {
-            throw new IllegalArgumentException("El ID del perfil es obligatorio");
+            throw new BadRequestException("El ID del perfil es obligatorio");
         }
         // Buscar el perfil
         Perfil perfil = perfilRepository.findById(userdto.getPerfilId())
-                .orElseThrow(() -> new EntityNotFoundException("Perfil no encontrado"));
+                .orElseThrow(() -> new BadRequestException("Perfil no encontrado"));
 
 
         String encodedPassword = passwordEncoder.encode("123456");

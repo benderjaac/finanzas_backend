@@ -1,36 +1,46 @@
 package com.primeng.primeng.exceptions;
 
+import com.primeng.primeng.models.response.HttpError;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<?> handleDeserializationError(HttpMessageNotReadableException ex) {
-        return ResponseEntity
-                .badRequest()
-                .body(Map.of(
-                        "title", "Error al leer el JSON",
-                        "message", ex.getMostSpecificCause().getMessage()
-                ));
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<HttpError> handleNotFound(NotFoundException ex, HttpServletRequest request) {
+        HttpError error = new HttpError(
+                "Recurso no encontrado",
+                ex.getMessage(),
+                request.getRequestURI(),
+                HttpStatus.NOT_FOUND.value()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<HttpError> handleBadRequest(IllegalArgumentException ex, HttpServletRequest request) {
+        HttpError error = new HttpError(
+                "Petición inválida",
+                ex.getMessage(),
+                request.getRequestURI(),
+                HttpStatus.BAD_REQUEST.value()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGeneric(Exception ex) {
-        ex.printStackTrace(); // útil mientras desarrollas
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of(
-                        "title", "Error inesperado",
-                        "message", ex.getMessage()
-                ));
+    public ResponseEntity<HttpError> handleGeneral(Exception ex, HttpServletRequest request) {
+        ex.printStackTrace(); // útil en desarrollo
+        HttpError error = new HttpError(
+                "Error interno del servidor",
+                ex.getMessage(),
+                request.getRequestURI(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value()
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }

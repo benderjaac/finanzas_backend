@@ -1,11 +1,13 @@
 package com.primeng.primeng.models.response;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @Getter
+@Setter
 public class HttpError {
 
     private String title;
