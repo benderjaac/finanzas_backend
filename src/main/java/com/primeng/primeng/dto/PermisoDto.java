@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class PermisoDTO {
+public class PermisoDto {
     private Long id;
     private String nombre;
     private String rol;
@@ -19,9 +19,9 @@ public class PermisoDTO {
     private Long padre_id;
     private String link;
     private String icon;
-    private List<PermisoDTO> hijos = new ArrayList<>();
+    private List<PermisoDto> hijos = new ArrayList<>();
 
-    public PermisoDTO(Permiso permiso) {
+    public PermisoDto(Permiso permiso) {
         this.id = permiso.getId();
         this.nombre = permiso.getNombre();
         this.rol = permiso.getRol();
@@ -37,12 +37,12 @@ public class PermisoDTO {
         if (permiso.getHijos() != null && !permiso.getHijos().isEmpty()) {
 
             this.hijos = permiso.getHijos().stream()
-                    .map(PermisoDTO::new)
+                    .map(PermisoDto::new)
                     .collect(Collectors.toList());
         }
 
     }
 
-    public PermisoDTO() {
+    public PermisoDto() {
     }
 }

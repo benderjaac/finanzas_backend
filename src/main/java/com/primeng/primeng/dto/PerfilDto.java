@@ -9,15 +9,15 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class PerfilDTO {
+public class PerfilDto {
     private Long id;
     private String nombre;
     private String descri;
 
     //private List<PermisoDTO> permisos;
-    private List<PermisoDTO> menu;
+    private List<PermisoDto> menu;
 
-    public PerfilDTO(Perfil perfil) {
+    public PerfilDto(Perfil perfil) {
         this.id = perfil.getId();
         this.nombre = perfil.getNombre();
         this.descri = perfil.getDescri();
@@ -25,11 +25,11 @@ public class PerfilDTO {
 
         if (perfil.getMenu() != null) {
             this.menu = perfil.getMenu().stream()
-                    .map(PermisoDTO::new)
+                    .map(PermisoDto::new)
                     .collect(Collectors.toList());
         }
     }
 
-    public PerfilDTO() {
+    public PerfilDto() {
     }
 }

@@ -8,7 +8,7 @@ import java.sql.Date;
 
 @Getter
 @Setter
-public class GastoCreateDTO {
+public class GastoCreateDto {
     public String descri;
     public Date fecha;
     public Float monto;

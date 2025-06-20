@@ -1,7 +1,6 @@
 package com.primeng.primeng.services;
 
-import com.primeng.primeng.dto.CategoriaGastoDTO;
-import com.primeng.primeng.dto.UserSimpleDto;
+import com.primeng.primeng.dto.CategoriaGastoDto;
 import com.primeng.primeng.exceptions.NotFoundException;
 import com.primeng.primeng.models.CategoriaGasto;
 import com.primeng.primeng.models.db.Query;
@@ -24,16 +23,16 @@ public class CategoriaGastoService {
     @Autowired
     private DBRepository db;
 
-    public Result<CategoriaGastoDTO> findAll(Query query){
+    public Result<CategoriaGastoDto> findAll(Query query){
         Result<CategoriaGasto> result = db.findAll(CategoriaGasto.class, query, true);
-        List<CategoriaGastoDTO> resultList = result.getData().stream()
-                .map(CategoriaGastoDTO::new)
+        List<CategoriaGastoDto> resultList = result.getData().stream()
+                .map(CategoriaGastoDto::new)
                 .collect(Collectors.toList());
         return new Result<>(resultList, result.getPagination());
     }
 
-    public CategoriaGastoDTO getByID(Long id){
+    public CategoriaGastoDto getByID(Long id){
         CategoriaGasto result = categoriaGastoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.CATEGORIAGASTO, id));
-        return new CategoriaGastoDTO(result);
+        return new CategoriaGastoDto(result);
     }
 }

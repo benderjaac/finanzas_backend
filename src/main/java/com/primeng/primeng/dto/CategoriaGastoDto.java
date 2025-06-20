@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CategoriaGastoDTO {
+public class CategoriaGastoDto {
     public Long id;
     public String color;
     public String descri;
@@ -14,7 +14,7 @@ public class CategoriaGastoDTO {
     public String nombre;
     public Boolean visible;
 
-    public CategoriaGastoDTO(CategoriaGasto CG){
+    public CategoriaGastoDto(CategoriaGasto CG){
         this.id = CG.getId();
         this.color = CG.getColor();
         this.descri = CG.getDescri();

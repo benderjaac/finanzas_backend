@@ -10,14 +10,14 @@ public class UserDto {
     private Long id;
     private String username;
     private String email;
-    private PerfilDTO perfil;
+    private PerfilDto perfil;
 
     public UserDto(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
         if (user.getPerfil() != null) {
-            this.perfil = new PerfilDTO(user.getPerfil());
+            this.perfil = new PerfilDto(user.getPerfil());
         }
     }
 

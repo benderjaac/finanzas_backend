@@ -1,28 +1,23 @@
 package com.primeng.primeng.services;
 
-import com.primeng.primeng.dto.CategoriaGastoDTO;
-import com.primeng.primeng.dto.GastoCreateDTO;
-import com.primeng.primeng.dto.GastoDTO;
-import com.primeng.primeng.dto.UserSimpleDto;
+import com.primeng.primeng.dto.GastoCreateDto;
+import com.primeng.primeng.dto.GastoDto;
 import com.primeng.primeng.exceptions.BadRequestException;
 import com.primeng.primeng.exceptions.NotFoundException;
 import com.primeng.primeng.models.CategoriaGasto;
 import com.primeng.primeng.models.Gasto;
-import com.primeng.primeng.models.Perfil;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.db.Result;
 import com.primeng.primeng.repositories.CategoriaGastoRepository;
 import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.repositories.GastoRepository;
-import com.primeng.primeng.repositories.UserRepository;
 import com.primeng.primeng.security.CustomUserDetails;
 import com.primeng.primeng.util.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,21 +38,21 @@ public class GastoService {
     @Autowired
     CustomUserDetailsService customUserDetailsService;
 
-    public Result<GastoDTO> findAll(Query query){
+    public Result<GastoDto> findAll(Query query){
         query.addFetch("categoria");
         Result<Gasto> result =  db.findAll(Gasto.class, query, true);
-        List<GastoDTO> resultList =  result.getData().stream()
-                .map(GastoDTO::new)
+        List<GastoDto> resultList =  result.getData().stream()
+                .map(GastoDto::new)
                 .collect(Collectors.toList());
         return new Result<>(resultList, result.getPagination());
     }
 
-    public GastoDTO getGastoById(Long id) {
+    public GastoDto getGastoById(Long id) {
         Gasto gasto = gastoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.USUARIO, id));
-        return new GastoDTO(gasto);
+        return new GastoDto(gasto);
     }
 
-    public GastoDTO createGasto(GastoCreateDTO gastodto) {
+    public GastoDto createGasto(GastoCreateDto gastodto) {
         // Validación de datos mínimos
         if (gastodto.getCategoriaId() == null) {
             throw new BadRequestException("El ID de la categoria es obligatorio");
@@ -79,7 +74,7 @@ public class GastoService {
         gasto.setUsuario(userEntity);
         gasto.setCategoria(catGasto);
 
-        return new GastoDTO(gastoRepository.save(gasto));
+        return new GastoDto(gastoRepository.save(gasto));
     }
 
     public Gasto updateGasto(Long id, Gasto nuevoGasto){

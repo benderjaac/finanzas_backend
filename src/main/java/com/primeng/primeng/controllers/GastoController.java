@@ -1,10 +1,7 @@
 package com.primeng.primeng.controllers;
 
-import com.primeng.primeng.dto.GastoCreateDTO;
-import com.primeng.primeng.dto.GastoDTO;
-import com.primeng.primeng.dto.UserCreateDto;
-import com.primeng.primeng.dto.UserSimpleDto;
-import com.primeng.primeng.models.Gasto;
+import com.primeng.primeng.dto.GastoCreateDto;
+import com.primeng.primeng.dto.GastoDto;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.response.HttpOk;
@@ -14,14 +11,11 @@ import com.primeng.primeng.util.Response;
 import com.primeng.primeng.util.Type;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/gastos")
@@ -58,8 +52,8 @@ public class GastoController {
 
     @PreAuthorize("hasAuthority('gasto_insert')")
     @PostMapping
-    public ResponseEntity<HttpOk> createGasto(@RequestBody GastoCreateDTO gasto) {
-        GastoDTO newGasto =  gastoService.createGasto(gasto);
+    public ResponseEntity<HttpOk> createGasto(@RequestBody GastoCreateDto gasto) {
+        GastoDto newGasto =  gastoService.createGasto(gasto);
         return response.create(newGasto.getId().toString(), newGasto);
     }
 
