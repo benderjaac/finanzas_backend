@@ -28,11 +28,18 @@ public class CategoriaGastoController {
         return response.find(categoriaGastoService.findAll(query));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<HttpOk> findById(
             HttpServletRequest request,
             @PathVariable Long id
     ){
         return response.find(categoriaGastoService.getByID(id));
+    }
+
+    @GetMapping("/catalogo")
+    public ResponseEntity<HttpOk> findAll(
+            HttpServletRequest request
+    ){
+        return response.find(categoriaGastoService.findAll());
     }
 }

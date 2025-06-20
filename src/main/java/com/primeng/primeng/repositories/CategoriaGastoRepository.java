@@ -7,4 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CategoriaGastoRepository extends JpaRepository<CategoriaGasto, Long> {
+
+    List<CategoriaGasto> findByUsuarioIdAndVisibleTrue(Long usuarioId);
+
 }
