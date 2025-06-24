@@ -48,7 +48,7 @@ public class GastoService {
     }
 
     public GastoDto getGastoById(Long id) {
-        Gasto gasto = gastoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.USUARIO, id));
+        Gasto gasto = gastoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.GASTO, id));
         return new GastoDto(gasto);
     }
 

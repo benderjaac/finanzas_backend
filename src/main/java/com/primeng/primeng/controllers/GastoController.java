@@ -5,7 +5,6 @@ import com.primeng.primeng.dto.GastoDto;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.response.HttpOk;
-import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.services.GastoService;
 import com.primeng.primeng.util.Response;
 import com.primeng.primeng.util.Type;
@@ -21,14 +20,8 @@ import java.util.Date;
 @RequestMapping("/api/gastos")
 public class GastoController {
 
-    private String title="Gasto";
-    private Date date = new Date();
-
     @Autowired
     private GastoService gastoService;
-
-    @Autowired
-    private DBRepository db;
 
     private Response response = new Response(Type.GASTO);
 
@@ -60,17 +53,9 @@ public class GastoController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseApi> deleteGasto(@PathVariable Long id) {
+    public ResponseEntity<HttpOk> deleteGasto(@PathVariable Long id) {
         gastoService.deleteGasto(id);
-        ResponseApi response = new ResponseApi<>(
-                this.title,
-                "OK",
-                "Eliminado exitosamente",
-                null,
-                this.date
-        );
-
-        return ResponseEntity.ok(response);
+        return response.delete(id.toString());
     }
 
 

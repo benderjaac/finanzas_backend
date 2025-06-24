@@ -1,8 +1,11 @@
 package com.primeng.primeng.dto;
 
-import com.primeng.primeng.models.CategoriaGasto;
 import com.primeng.primeng.models.CategoriaIngreso;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CategoriaIngresoDto {
     public Long id;
     public String color;

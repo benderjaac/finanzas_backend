@@ -4,6 +4,7 @@ public enum Type {
 
     USUARIO("Usuario", "Id Usuario"),
     GASTO("Gasto", "Id Gasto"),
+    INGRESO("Ingreso", "Id Ingreso"),
     CATEGORIAGASTO("Categoria de gasto", "Id Categoria"),
     CATEGORIAINGRESO("Categoria de ingreso", "Id Categoria"),
     ;
