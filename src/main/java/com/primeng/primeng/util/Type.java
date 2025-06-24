@@ -5,6 +5,7 @@ public enum Type {
     USUARIO("Usuario", "Id Usuario"),
     GASTO("Gasto", "Id Gasto"),
     CATEGORIAGASTO("Categoria de gasto", "Id Categoria"),
+    CATEGORIAINGRESO("Categoria de ingreso", "Id Categoria"),
     ;
 
     private String display;

@@ -12,13 +12,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<HttpError> handleNotFound(NotFoundException ex, HttpServletRequest request) {
-        HttpError error = new HttpError(
-                "Recurso no encontrado",
-                ex.getMessage(),
-                request.getRequestURI(),
-                HttpStatus.NOT_FOUND.value()
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ex.getHttpError(request.getRequestURI()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
