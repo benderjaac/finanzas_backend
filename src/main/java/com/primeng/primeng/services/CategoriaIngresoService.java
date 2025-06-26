@@ -1,8 +1,11 @@
 package com.primeng.primeng.services;
 
+import com.primeng.primeng.dto.CategoriaIngresoCreateDto;
 import com.primeng.primeng.dto.CategoriaIngresoDto;
 import com.primeng.primeng.exceptions.NotFoundException;
 import com.primeng.primeng.models.CategoriaIngreso;
+import com.primeng.primeng.models.CategoriaIngreso;
+import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.Catalogo;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.db.Result;
@@ -27,6 +30,9 @@ public class CategoriaIngresoService {
 
     @Autowired
     CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    UserService userService;
 
     //categorias de ingreso por query
     public Result<CategoriaIngresoDto> findAll(Query query){
@@ -54,5 +60,24 @@ public class CategoriaIngresoService {
     public CategoriaIngresoDto getByID(Long id){
         CategoriaIngreso result = categoriaIngresoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.CATEGORIAINGRESO, id));
         return new CategoriaIngresoDto(result);
+    }
+
+    public CategoriaIngresoDto createCategoria(CategoriaIngresoCreateDto catIngresodto) {
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        User userEntity = userService.getUserById(usuario.getId());
+
+        // Crear entidad CategoriaIngreso
+        CategoriaIngreso categoriaIngreso = new CategoriaIngreso();
+
+        categoriaIngreso.setNombre(catIngresodto.getNombre());
+        categoriaIngreso.setDescri(catIngresodto.getDescri());
+        categoriaIngreso.setColor(catIngresodto.getColor());
+        categoriaIngreso.setIcon(catIngresodto.getIcon());
+        categoriaIngreso.setUsuario(userEntity);
+        categoriaIngreso.setVisible(true);
+
+
+
+        return new CategoriaIngresoDto(categoriaIngresoRepository.save(categoriaIngreso));
     }
 }

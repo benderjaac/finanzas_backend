@@ -77,6 +77,7 @@ public class CategoriaGastoService {
         categoriaGasto.setColor(catGastodto.getColor());
         categoriaGasto.setIcon(catGastodto.getIcon());
         categoriaGasto.setUsuario(userEntity);
+        categoriaGasto.setVisible(true);
 
 
 
