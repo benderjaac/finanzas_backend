@@ -1,8 +1,14 @@
 package com.primeng.primeng.services;
 
+import com.primeng.primeng.dto.CategoriaGastoCreateDto;
 import com.primeng.primeng.dto.CategoriaGastoDto;
+import com.primeng.primeng.dto.GastoCreateDto;
+import com.primeng.primeng.dto.GastoDto;
+import com.primeng.primeng.exceptions.BadRequestException;
 import com.primeng.primeng.exceptions.NotFoundException;
 import com.primeng.primeng.models.CategoriaGasto;
+import com.primeng.primeng.models.Gasto;
+import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.Catalogo;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.db.Result;
@@ -27,6 +33,9 @@ public class CategoriaGastoService {
 
     @Autowired
     CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    UserService userService;
 
     //categorias por query
     public Result<CategoriaGastoDto> findAll(Query query){
@@ -54,5 +63,23 @@ public class CategoriaGastoService {
     public CategoriaGastoDto getByID(Long id){
         CategoriaGasto result = categoriaGastoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.CATEGORIAGASTO, id));
         return new CategoriaGastoDto(result);
+    }
+
+    public CategoriaGastoDto createCategoria(CategoriaGastoCreateDto catGastodto) {
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        User userEntity = userService.getUserById(usuario.getId());
+
+        // Crear entidad CategoriaGasto
+        CategoriaGasto categoriaGasto = new CategoriaGasto();
+
+        categoriaGasto.setNombre(catGastodto.getNombre());
+        categoriaGasto.setDescri(catGastodto.getDescri());
+        categoriaGasto.setColor(catGastodto.getColor());
+        categoriaGasto.setIcon(catGastodto.getIcon());
+        categoriaGasto.setUsuario(userEntity);
+
+
+
+        return new CategoriaGastoDto(categoriaGastoRepository.save(categoriaGasto));
     }
 }
