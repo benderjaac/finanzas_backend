@@ -1,7 +1,7 @@
 package com.primeng.primeng.controllers;
 
-import com.primeng.primeng.dto.CategoriaGastoCreateDto;
-import com.primeng.primeng.dto.CategoriaGastoDto;
+import com.primeng.primeng.dto.CategoriaIngresoCreateDto;
+import com.primeng.primeng.dto.CategoriaIngresoDto;
 import com.primeng.primeng.dto.CategoriaIngresoCreateDto;
 import com.primeng.primeng.dto.CategoriaIngresoDto;
 import com.primeng.primeng.models.db.Query;
@@ -53,5 +53,19 @@ public class CategoriaIngresoController {
     public ResponseEntity<HttpOk> createCategoriaIngreso(@RequestBody CategoriaIngresoCreateDto catIngreso) {
         CategoriaIngresoDto newCatIngreso =  categoriaIngresoService.createCategoria(catIngreso);
         return response.create(newCatIngreso.getId().toString(), newCatIngreso);
+    }
+
+    @PreAuthorize("hasAuthority('categorias_ingreso_select')")
+    @PutMapping("/{id:\\d+}")
+    public ResponseEntity<HttpOk> updateCategoriaIngreso(@PathVariable Long id, @RequestBody CategoriaIngresoCreateDto categoriaIngreso) {
+        CategoriaIngresoDto newCategoriaIngreso =  categoriaIngresoService.updateCategoriaIngreso(id, categoriaIngreso);
+        return response.update(newCategoriaIngreso.getId().toString());
+    }
+
+    @PreAuthorize("hasAuthority('categorias_ingreso_select')")
+    @DeleteMapping("/{id:\\d+}")
+    public ResponseEntity<HttpOk> deleteCategoriaIngreso(@PathVariable Long id) {
+        categoriaIngresoService.deleteCategoriaIngreso(id);
+        return response.delete(id.toString());
     }
 }

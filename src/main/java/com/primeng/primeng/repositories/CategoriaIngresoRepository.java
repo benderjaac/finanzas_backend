@@ -12,4 +12,6 @@ public interface CategoriaIngresoRepository extends JpaRepository<CategoriaIngre
     List<CategoriaIngreso> findByUsuarioIdAndVisibleTrue(Long usuarioId);
 
     Optional<CategoriaIngreso> findByIdAndUsuarioId(Long id, Long usuarioId);
+
+    int deleteByIdAndUsuarioId(Long id, Long usuarioId);
 }

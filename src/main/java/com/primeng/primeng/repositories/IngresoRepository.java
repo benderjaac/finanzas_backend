@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface IngresoRepository extends JpaRepository<Ingreso, Long> {
     Optional<Ingreso> findByIdAndUsuarioId(Long id, Long usuarioId);
+
+    int deleteByIdAndUsuarioId(Long id, Long usuarioId);
 }

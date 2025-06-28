@@ -61,11 +61,12 @@ public class GastoService {
             throw new BadRequestException("El ID de la categoria es obligatorio");
         }
 
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
         // Buscar la categoria
-        CategoriaGasto catGasto = categoriaGastoRepository.findById(gastodto.getCategoriaId())
+        CategoriaGasto catGasto = categoriaGastoRepository.findByIdAndUsuarioId(gastodto.getCategoriaId(), usuario.getId())
                 .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
 
-        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+
         User userEntity = userService.getUserById(usuario.getId());
 
         // Crear entidad Gasto
@@ -81,14 +82,15 @@ public class GastoService {
     }
 
     public GastoDto updateGasto(Long id, GastoCreateDto nuevoGasto){
-        Gasto gasto = gastoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.GASTO, id));
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        Gasto gasto = gastoRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.GASTO, id));
         // Validación de datos mínimos
         if (nuevoGasto.getCategoriaId() == null) {
             throw new BadRequestException("El ID de la categoria es obligatorio");
         }
 
         // Buscar la categoria
-        CategoriaGasto catGasto = categoriaGastoRepository.findById(nuevoGasto.getCategoriaId())
+        CategoriaGasto catGasto = categoriaGastoRepository.findByIdAndUsuarioId(nuevoGasto.getCategoriaId(), usuario.getId())
                 .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
 
         gasto.setDescri(nuevoGasto.getDescri());
@@ -100,6 +102,10 @@ public class GastoService {
     }
 
     public void deleteGasto(Long id) {
-        gastoRepository.deleteById(id);
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        int deleted = gastoRepository.deleteByIdAndUsuarioId(id, usuario.getId());
+        if (deleted == 0) {
+            throw new NotFoundException(Type.GASTO, id);
+        }
     }
 }

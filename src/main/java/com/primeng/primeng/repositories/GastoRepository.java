@@ -10,4 +10,6 @@ import java.util.Optional;
 
 public interface GastoRepository extends JpaRepository<Gasto, Long> {
     Optional<Gasto> findByIdAndUsuarioId(Long id, Long usuarioId);
+
+    int deleteByIdAndUsuarioId(Long id, Long usuarioId);
 }

@@ -12,4 +12,6 @@ public interface CategoriaGastoRepository extends JpaRepository<CategoriaGasto, 
     List<CategoriaGasto> findByUsuarioIdAndVisibleTrue(Long usuarioId);
 
     Optional<CategoriaGasto> findByIdAndUsuarioId(Long id, Long usuarioId);
+
+    int deleteByIdAndUsuarioId(Long id, Long usuarioId);
 }

@@ -60,11 +60,12 @@ public class IngresoService {
             throw new BadRequestException("El ID de la categoria es obligatorio");
         }
 
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
         // Buscar la categoria
-        CategoriaIngreso catIngreso = categoriaIngresoRepository.findById(ingresodto.getCategoriaId())
+        CategoriaIngreso catIngreso = categoriaIngresoRepository.findByIdAndUsuarioId(ingresodto.getCategoriaId(), usuario.getId())
                 .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
 
-        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+
         User userEntity = userService.getUserById(usuario.getId());
 
         // Crear entidad Ingreso
@@ -80,14 +81,15 @@ public class IngresoService {
     }
 
     public IngresoDto updateIngreso(Long id, IngresoCreateDto nuevoIngreso){
-        Ingreso ingreso = ingresoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.GASTO, id));
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        Ingreso ingreso = ingresoRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.GASTO, id));
         // Validación de datos mínimos
         if (nuevoIngreso.getCategoriaId() == null) {
             throw new BadRequestException("El ID de la categoria es obligatorio");
         }
 
         // Buscar la categoria
-        CategoriaIngreso catIngreso = categoriaIngresoRepository.findById(nuevoIngreso.getCategoriaId())
+        CategoriaIngreso catIngreso = categoriaIngresoRepository.findByIdAndUsuarioId(nuevoIngreso.getCategoriaId(), usuario.getId())
                 .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
 
         ingreso.setDescri(nuevoIngreso.getDescri());
@@ -99,6 +101,11 @@ public class IngresoService {
     }
 
     public void deleteIngreso(Long id) {
-        ingresoRepository.deleteById(id);
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        int deleted = ingresoRepository.deleteByIdAndUsuarioId(id, usuario.getId());
+        if (deleted == 0) {
+            throw new NotFoundException(Type.INGRESO, id);
+        }
+
     }
 }

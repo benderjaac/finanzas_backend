@@ -1,9 +1,6 @@
 package com.primeng.primeng.controllers;
 
-import com.primeng.primeng.dto.CategoriaGastoCreateDto;
-import com.primeng.primeng.dto.CategoriaGastoDto;
-import com.primeng.primeng.dto.GastoCreateDto;
-import com.primeng.primeng.dto.GastoDto;
+import com.primeng.primeng.dto.*;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.response.HttpOk;
 import com.primeng.primeng.services.CategoriaGastoService;
@@ -53,5 +50,19 @@ public class CategoriaGastoController {
     public ResponseEntity<HttpOk> createCategoriaGasto(@RequestBody CategoriaGastoCreateDto catGasto) {
         CategoriaGastoDto newCatGasto =  categoriaGastoService.createCategoria(catGasto);
         return response.create(newCatGasto.getId().toString(), newCatGasto);
+    }
+
+    @PreAuthorize("hasAuthority('categorias_gasto_select')")
+    @PutMapping("/{id:\\d+}")
+    public ResponseEntity<HttpOk> updateCategoriaGasto(@PathVariable Long id, @RequestBody CategoriaGastoCreateDto categoriaGasto) {
+        CategoriaGastoDto newCategoriaGasto =  categoriaGastoService.updateCategoriaGasto(id, categoriaGasto);
+        return response.update(newCategoriaGasto.getId().toString());
+    }
+
+    @PreAuthorize("hasAuthority('categoriaGasto_select')")
+    @DeleteMapping("/{id:\\d+}")
+    public ResponseEntity<HttpOk> deleteCategoriaGasto(@PathVariable Long id) {
+        categoriaGastoService.deleteCategoriaGasto(id);
+        return response.delete(id.toString());
     }
 }

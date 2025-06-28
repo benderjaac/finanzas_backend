@@ -12,4 +12,6 @@ public interface AhorroRepository extends JpaRepository<Ahorro, Long> {
     List<Ahorro> findByUsuarioId(Long usuarioId);
 
     Optional<Ahorro> findByIdAndUsuarioId(Long id, Long usuarioId);
+
+    int deleteByIdAndUsuarioId(Long id, Long usuarioId);
 }

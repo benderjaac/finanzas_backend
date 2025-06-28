@@ -69,7 +69,8 @@ public class AhorroService {
     }
 
     public AhorroDto updateAhorro(Long id, AhorroCreateDto nuevoAhorro){
-        Ahorro ahorro = ahorroRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.AHORRO, id));
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        Ahorro ahorro = ahorroRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.AHORRO, id));
 
         ahorro.setFecha_inicio(nuevoAhorro.getFecha_inicio());
         ahorro.setDescri(nuevoAhorro.getDescri());
@@ -81,6 +82,10 @@ public class AhorroService {
     }
 
     public void deleteAhorro(Long id) {
-        ahorroRepository.deleteById(id);
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        int deleted = ahorroRepository.deleteByIdAndUsuarioId(id, usuario.getId());
+        if (deleted == 0) {
+            throw new NotFoundException(Type.AHORRO, id);
+        }
     }
 }

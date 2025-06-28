@@ -2,7 +2,10 @@ package com.primeng.primeng.services;
 
 import com.primeng.primeng.dto.CategoriaIngresoCreateDto;
 import com.primeng.primeng.dto.CategoriaIngresoDto;
+import com.primeng.primeng.dto.CategoriaIngresoCreateDto;
+import com.primeng.primeng.dto.CategoriaIngresoDto;
 import com.primeng.primeng.exceptions.NotFoundException;
+import com.primeng.primeng.models.CategoriaIngreso;
 import com.primeng.primeng.models.CategoriaIngreso;
 import com.primeng.primeng.models.CategoriaIngreso;
 import com.primeng.primeng.models.User;
@@ -78,8 +81,26 @@ public class CategoriaIngresoService {
         categoriaIngreso.setUsuario(userEntity);
         categoriaIngreso.setVisible(true);
 
-
-
         return new CategoriaIngresoDto(categoriaIngresoRepository.save(categoriaIngreso));
+    }
+
+    public CategoriaIngresoDto updateCategoriaIngreso(Long id, CategoriaIngresoCreateDto nuevaCat){
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        CategoriaIngreso categoria = categoriaIngresoRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.CATEGORIAGASTO, id));
+
+        categoria.setDescri(nuevaCat.getDescri());
+        categoria.setNombre(nuevaCat.getNombre());
+        categoria.setColor(nuevaCat.getColor());
+        categoria.setIcon(nuevaCat.getIcon());
+
+        return new CategoriaIngresoDto(categoriaIngresoRepository.save(categoria));
+    }
+
+    public void deleteCategoriaIngreso(Long id) {
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        int deleted = categoriaIngresoRepository.deleteByIdAndUsuarioId(id, usuario.getId());
+        if (deleted == 0) {
+            throw new NotFoundException(Type.CATEGORIAINGRESO, id);
+        }
     }
 }
