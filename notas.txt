@@ -4,3 +4,4 @@ mvnw.cmd clean package -DskipTests
 evitar hacer multiples consultas en categoria_gasto.
 crud completo de usuarios.
 
+modificar los getById que sean por usuario

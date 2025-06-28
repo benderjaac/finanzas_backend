@@ -46,7 +46,9 @@ public class AhorroService {
 
     //ahorro por id
     public AhorroDto getByID(Long id){
-        Ahorro result = ahorroRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.AHORRO, id));
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+
+        Ahorro result = ahorroRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.AHORRO, id));
         return new AhorroDto(result);
     }
 

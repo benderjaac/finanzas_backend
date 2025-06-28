@@ -1,7 +1,10 @@
 package com.primeng.primeng.controllers;
 
+import com.primeng.primeng.dto.AhorroCreateDto;
+import com.primeng.primeng.dto.AhorroDto;
 import com.primeng.primeng.dto.GastoCreateDto;
 import com.primeng.primeng.dto.GastoDto;
+import com.primeng.primeng.models.Gasto;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.response.HttpOk;
@@ -48,6 +51,13 @@ public class GastoController {
     public ResponseEntity<HttpOk> createGasto(@RequestBody GastoCreateDto gasto) {
         GastoDto newGasto =  gastoService.createGasto(gasto);
         return response.create(newGasto.getId().toString(), newGasto);
+    }
+
+    @PreAuthorize("hasAuthority('gasto_select')")
+    @PutMapping("/{id}")
+    public ResponseEntity<HttpOk> updateGasto(@PathVariable Long id, @RequestBody GastoCreateDto gasto) {
+        GastoDto newGasto =  gastoService.updateGasto(id, gasto);
+        return response.update(newGasto.getId().toString());
     }
 
 

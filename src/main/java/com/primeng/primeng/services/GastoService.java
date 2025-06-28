@@ -1,5 +1,6 @@
 package com.primeng.primeng.services;
 
+import com.primeng.primeng.dto.AhorroDto;
 import com.primeng.primeng.dto.GastoCreateDto;
 import com.primeng.primeng.dto.GastoDto;
 import com.primeng.primeng.exceptions.BadRequestException;
@@ -48,7 +49,9 @@ public class GastoService {
     }
 
     public GastoDto getGastoById(Long id) {
-        Gasto gasto = gastoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.GASTO, id));
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+
+        Gasto gasto = gastoRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.GASTO, id));
         return new GastoDto(gasto);
     }
 
@@ -77,15 +80,23 @@ public class GastoService {
         return new GastoDto(gastoRepository.save(gasto));
     }
 
-    public Gasto updateGasto(Long id, Gasto nuevoGasto){
-        return gastoRepository.findById(id).map(gastoExistente -> {
-            gastoExistente.setDescri(nuevoGasto.getDescri());
-            gastoExistente.setMonto(nuevoGasto.getMonto());
-            gastoExistente.setFecha(nuevoGasto.getFecha());
-            // Actualiza otros campos según tu modelo
+    public GastoDto updateGasto(Long id, GastoCreateDto nuevoGasto){
+        Gasto gasto = gastoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.GASTO, id));
+        // Validación de datos mínimos
+        if (nuevoGasto.getCategoriaId() == null) {
+            throw new BadRequestException("El ID de la categoria es obligatorio");
+        }
 
-            return gastoRepository.save(gastoExistente);
-        }).orElseThrow(() -> new RuntimeException("Gasto no encontrado con id " + id));
+        // Buscar la categoria
+        CategoriaGasto catGasto = categoriaGastoRepository.findById(nuevoGasto.getCategoriaId())
+                .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
+
+        gasto.setDescri(nuevoGasto.getDescri());
+        gasto.setMonto(nuevoGasto.getMonto());
+        gasto.setFecha(nuevoGasto.getFecha());
+        gasto.setCategoria(catGasto);
+
+        return new GastoDto(gastoRepository.save(gasto));
     }
 
     public void deleteGasto(Long id) {

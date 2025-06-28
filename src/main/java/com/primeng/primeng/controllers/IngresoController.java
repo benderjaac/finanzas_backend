@@ -1,10 +1,16 @@
 package com.primeng.primeng.controllers;
 
+import com.primeng.primeng.dto.*;
 import com.primeng.primeng.dto.IngresoCreateDto;
 import com.primeng.primeng.dto.IngresoDto;
+import com.primeng.primeng.exceptions.BadRequestException;
+import com.primeng.primeng.exceptions.NotFoundException;
+import com.primeng.primeng.models.CategoriaIngreso;
+import com.primeng.primeng.models.Ingreso;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.response.HttpOk;
+import com.primeng.primeng.services.CategoriaIngresoService;
 import com.primeng.primeng.services.IngresoService;
 import com.primeng.primeng.util.Response;
 import com.primeng.primeng.util.Type;
@@ -21,6 +27,9 @@ import java.util.Date;
 public class IngresoController {
     @Autowired
     private IngresoService ingresoService;
+
+    @Autowired
+    CategoriaIngresoService categoriaIngresoService;
 
     private Response response = new Response(Type.GASTO);
 
@@ -47,6 +56,13 @@ public class IngresoController {
     public ResponseEntity<HttpOk> createIngreso(@RequestBody IngresoCreateDto ingreso) {
         IngresoDto newIngreso =  ingresoService.createIngreso(ingreso);
         return response.create(newIngreso.getId().toString(), newIngreso);
+    }
+
+    @PreAuthorize("hasAuthority('ingreso_select')")
+    @PutMapping("/{id}")
+    public ResponseEntity<HttpOk> updateIngreso(@PathVariable Long id, @RequestBody IngresoCreateDto ingreso) {
+        IngresoDto newIngreso =  ingresoService.updateIngreso(id, ingreso);
+        return response.update(newIngreso.getId().toString());
     }
 
     @DeleteMapping("/{id}")

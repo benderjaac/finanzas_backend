@@ -61,7 +61,9 @@ public class CategoriaGastoService {
 
     //categoria por id
     public CategoriaGastoDto getByID(Long id){
-        CategoriaGasto result = categoriaGastoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.CATEGORIAGASTO, id));
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+
+        CategoriaGasto result = categoriaGastoRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.CATEGORIAGASTO, id));
         return new CategoriaGastoDto(result);
     }
 

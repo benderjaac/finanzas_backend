@@ -58,7 +58,9 @@ public class CategoriaIngresoService {
 
     //categoria por id
     public CategoriaIngresoDto getByID(Long id){
-        CategoriaIngreso result = categoriaIngresoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.CATEGORIAINGRESO, id));
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+
+        CategoriaIngreso result = categoriaIngresoRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.CATEGORIAINGRESO, id));
         return new CategoriaIngresoDto(result);
     }
 

@@ -2,11 +2,11 @@ package com.primeng.primeng.services;
 
 import com.primeng.primeng.dto.IngresoCreateDto;
 import com.primeng.primeng.dto.IngresoDto;
+import com.primeng.primeng.dto.IngresoCreateDto;
+import com.primeng.primeng.dto.IngresoDto;
 import com.primeng.primeng.exceptions.BadRequestException;
 import com.primeng.primeng.exceptions.NotFoundException;
-import com.primeng.primeng.models.CategoriaIngreso;
-import com.primeng.primeng.models.Ingreso;
-import com.primeng.primeng.models.User;
+import com.primeng.primeng.models.*;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.db.Result;
 import com.primeng.primeng.repositories.CategoriaIngresoRepository;
@@ -48,7 +48,9 @@ public class IngresoService {
     }
 
     public IngresoDto getIngresoById(Long id) {
-        Ingreso ingreso = ingresoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.INGRESO, id));
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+
+        Ingreso ingreso = ingresoRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.INGRESO, id));
         return new IngresoDto(ingreso);
     }
 
@@ -77,15 +79,23 @@ public class IngresoService {
         return new IngresoDto(ingresoRepository.save(ingreso));
     }
 
-    public Ingreso updateIngreso(Long id, Ingreso nuevoIngreso){
-        return ingresoRepository.findById(id).map(ingresoExistente -> {
-            ingresoExistente.setDescri(nuevoIngreso.getDescri());
-            ingresoExistente.setMonto(nuevoIngreso.getMonto());
-            ingresoExistente.setFecha(nuevoIngreso.getFecha());
-            // Actualiza otros campos según tu modelo
+    public IngresoDto updateIngreso(Long id, IngresoCreateDto nuevoIngreso){
+        Ingreso ingreso = ingresoRepository.findById(id).orElseThrow(() -> new NotFoundException(Type.GASTO, id));
+        // Validación de datos mínimos
+        if (nuevoIngreso.getCategoriaId() == null) {
+            throw new BadRequestException("El ID de la categoria es obligatorio");
+        }
 
-            return ingresoRepository.save(ingresoExistente);
-        }).orElseThrow(() -> new RuntimeException("Ingreso no encontrado con id " + id));
+        // Buscar la categoria
+        CategoriaIngreso catIngreso = categoriaIngresoRepository.findById(nuevoIngreso.getCategoriaId())
+                .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
+
+        ingreso.setDescri(nuevoIngreso.getDescri());
+        ingreso.setMonto(nuevoIngreso.getMonto());
+        ingreso.setFecha(nuevoIngreso.getFecha());
+        ingreso.setCategoria(catIngreso);
+
+        return new IngresoDto(ingresoRepository.save(ingreso));
     }
 
     public void deleteIngreso(Long id) {

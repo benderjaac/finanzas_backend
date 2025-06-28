@@ -52,7 +52,7 @@ public class AhorroController {
     @PutMapping("/{id}")
     public ResponseEntity<HttpOk> updateAhorro(@PathVariable Long id, @RequestBody AhorroCreateDto ahorro) {
         AhorroDto newAhorro =  ahorroService.updateAhorro(id, ahorro);
-        return response.create(newAhorro.getId().toString(), newAhorro);
+        return response.update(newAhorro.getId().toString());
     }
 
     @PreAuthorize("hasAuthority('ahorro_select')")
