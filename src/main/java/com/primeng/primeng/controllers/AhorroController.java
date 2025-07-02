@@ -25,7 +25,7 @@ public class AhorroController {
     private Response response = new Response(Type.AHORRO);
 
     @PreAuthorize("hasAuthority('ahorro_select')")
-    @PostMapping("/data")
+    @GetMapping("/data")
     public ResponseEntity<HttpOk> findAll(
             HttpServletRequest request
     ){

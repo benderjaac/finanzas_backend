@@ -7,28 +7,24 @@ import lombok.Setter;
 import java.sql.Date;
 
 @Entity
-@Table(name = "ahorros")
+@Table(name ="ahorro_depositos")
 @Getter
 @Setter
-public class Ahorro {
+public class AhorroDeposito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ahorro_id")
+    private Ahorro ahorro;
+
     @Column(nullable = false)
-    private Date fecha_inicio;
+    private Date fecha;
+
+    @Column(nullable = false)
+    private Float monto;
 
     @Column(nullable = false)
     private String descri;
-
-    @Column(nullable = false)
-    private Float monto_meta;
-
-    @Column(nullable = false)
-    private Float monto_actual;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
-    private User usuario;
-
 }
