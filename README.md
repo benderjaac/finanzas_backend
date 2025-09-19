@@ -22,3 +22,18 @@ Graficas comparativas
 * Java 17
 * Spring boot | maven | JPA | JWT | postgresql | jackson | lombok
 * Postgres 16
+
+### Instalacion
+* Clonar repositorio
+* Crear archivo src/main/java/resources/application.properties con las siguientes variables:
+
+spring.application.name=nombre_sistema
+spring.datasource.url=***
+spring.datasource.username=****
+spring.datasource.password=****
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+y Configurar valores para la conexion a base de datos
