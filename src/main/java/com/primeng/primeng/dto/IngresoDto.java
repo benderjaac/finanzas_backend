@@ -1,11 +1,10 @@
 package com.primeng.primeng.dto;
 
-import com.primeng.primeng.models.Gasto;
 import com.primeng.primeng.models.Ingreso;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -13,7 +12,7 @@ public class IngresoDto {
     public Long id;
     public Boolean contado;
     public String descri;
-    public Date fecha;
+    public LocalDate fecha;
     public Float monto;
     private Long categoria_id;
     private String categoriaNombre;

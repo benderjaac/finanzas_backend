@@ -4,14 +4,14 @@ import com.primeng.primeng.models.Ahorro;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 
 public class AhorroDto {
     public Long id;
-    public Date fecha_inicio;
+    public LocalDate fecha_inicio;
     public String descri;
     public Float monto_meta;
     public Float monto_actual;

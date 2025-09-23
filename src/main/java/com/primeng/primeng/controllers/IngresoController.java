@@ -31,7 +31,7 @@ public class IngresoController {
     @Autowired
     CategoriaIngresoService categoriaIngresoService;
 
-    private Response response = new Response(Type.GASTO);
+    private Response response = new Response(Type.INGRESO);
 
     @PreAuthorize("hasAuthority('ingreso_select')")
     @PostMapping("/data")

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "ahorros")
@@ -16,7 +16,7 @@ public class Ahorro {
     private Long id;
 
     @Column(nullable = false)
-    private Date fecha_inicio;
+    private LocalDate fecha_inicio;
 
     @Column(nullable = false)
     private String descri;
