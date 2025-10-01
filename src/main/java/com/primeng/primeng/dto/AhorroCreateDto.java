@@ -12,5 +12,4 @@ public class AhorroCreateDto {
     public LocalDate fecha_inicio;
     public String descri;
     public Float monto_meta;
-    public Float monto_actual;
 }

@@ -61,7 +61,7 @@ public class AhorroService {
         Ahorro ahorro = new Ahorro();
         ahorro.setDescri(ahorroCdto.getDescri());
         ahorro.setFecha_inicio(ahorroCdto.getFecha_inicio());
-        ahorro.setMonto_actual(ahorroCdto.getMonto_actual());
+        ahorro.setMonto_actual(0.0f);
         ahorro.setMonto_meta(ahorroCdto.getMonto_meta());
         ahorro.setUsuario(userEntity);
 
@@ -74,7 +74,6 @@ public class AhorroService {
 
         ahorro.setFecha_inicio(nuevoAhorro.getFecha_inicio());
         ahorro.setDescri(nuevoAhorro.getDescri());
-        ahorro.setMonto_actual(nuevoAhorro.getMonto_actual());
         ahorro.setMonto_meta(nuevoAhorro.getMonto_meta());
         ahorro.setFecha_inicio(nuevoAhorro.getFecha_inicio());
 
