@@ -77,4 +77,29 @@ public class AhorroDepositoService {
 
         return new AhorroDepositoDto(ahorroDeposito);
     }
+
+    //actualizar un deposito del ahorro
+    @Transactional
+    public AhorroDepositoDto updateAhorroDeposito(Long ahorroDepositoId, AhorroDepositoCreateDto ahorroDepositoCdto, Long ahorroId) {
+
+        //consultar el ahorro para validar
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        Ahorro ahorro = ahorroRepository.findByIdAndUsuarioId(ahorroId, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.AHORRO, ahorroId));
+
+        //consultar el deposito
+        AhorroDeposito ahorroDeposito = ahorroDepositoRepository.findById(ahorroDepositoId).orElseThrow(() -> new NotFoundException(Type.AHORRODEPOSITO, ahorroDepositoId));
+
+        //modificar el ahorro actual
+        ahorro.setMonto_actual(ahorro.getMonto_actual() - ahorroDeposito.getMonto() + ahorroDepositoCdto.getMonto());
+
+        // Actualizar entidad AhorroDeposito
+        ahorroDeposito.setDescri(ahorroDepositoCdto.getDescri());
+        ahorroDeposito.setFecha(ahorroDepositoCdto.getFecha());
+        ahorroDeposito.setMonto(ahorroDepositoCdto.getMonto());
+
+        ahorroRepository.save(ahorro);
+        ahorroDepositoRepository.save(ahorroDeposito);
+
+        return new AhorroDepositoDto(ahorroDeposito);
+    }
 }

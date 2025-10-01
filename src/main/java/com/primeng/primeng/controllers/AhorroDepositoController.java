@@ -42,4 +42,15 @@ public class AhorroDepositoController {
         AhorroDepositoDto newAhorroDeposito =  ahorroDepositoService.createAhorroDeposito(ahorroDeposito, id);
         return response.create(newAhorroDeposito.getId().toString(), newAhorroDeposito);
     }
+
+    @PreAuthorize("hasAuthority('ahorro_select')")
+    @PutMapping("/{idAhorro:\\d+}/{idDeposito:\\d+}")
+    public ResponseEntity<HttpOk> updateAhorroDeposito(
+            @RequestBody AhorroDepositoCreateDto ahorroDeposito,
+            @PathVariable Long idAhorro,
+            @PathVariable Long idDeposito
+    ) {
+        AhorroDepositoDto newAhorroDeposito =  ahorroDepositoService.updateAhorroDeposito(idDeposito,ahorroDeposito, idAhorro);
+        return response.update(newAhorroDeposito.getId().toString());
+    }
 }
