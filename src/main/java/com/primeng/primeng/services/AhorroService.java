@@ -37,7 +37,7 @@ public class AhorroService {
     //obtener todos los registros
     public Catalogo<AhorroDto> findAll(){
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
-        List<Ahorro> result = ahorroRepository.findByUsuarioId(usuario.getId());
+        List<Ahorro> result = ahorroRepository.findByUsuarioIdOrderById(usuario.getId());
         List<AhorroDto> resultList = result.stream()
                 .map(AhorroDto::new)
                 .collect(Collectors.toList());

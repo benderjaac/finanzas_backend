@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface AhorroRepository extends JpaRepository<Ahorro, Long> {
 
-    List<Ahorro> findByUsuarioId(Long usuarioId);
+    List<Ahorro> findByUsuarioIdOrderById(Long usuarioId);
 
     Optional<Ahorro> findByIdAndUsuarioId(Long id, Long usuarioId);
 
