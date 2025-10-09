@@ -32,8 +32,5 @@ public class Ingreso {
     @JoinColumn(name = "categoria_id")
     private CategoriaIngreso categoria;
 
-    @Column(nullable = false)
-    private Boolean contado;
-
     public Ingreso(){}
 }

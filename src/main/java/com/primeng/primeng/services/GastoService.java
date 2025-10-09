@@ -74,7 +74,6 @@ public class GastoService {
         gasto.setDescri(gastodto.getDescri());
         gasto.setFecha(gastodto.getFecha());
         gasto.setMonto(gastodto.getMonto());
-        gasto.setContado(false);
         gasto.setUsuario(userEntity);
         gasto.setCategoria(catGasto);
 

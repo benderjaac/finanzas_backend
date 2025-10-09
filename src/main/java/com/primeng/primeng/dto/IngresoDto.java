@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @Setter
 public class IngresoDto {
     public Long id;
-    public Boolean contado;
     public String descri;
     public LocalDate fecha;
     public Float monto;
@@ -21,7 +20,6 @@ public class IngresoDto {
 
     public IngresoDto(Ingreso ingreso){
         this.id = ingreso.getId();
-        this.contado = ingreso.getContado();
         this.descri = ingreso.getDescri();
         this.fecha = ingreso.getFecha();
         this.monto = ingreso.getMonto();

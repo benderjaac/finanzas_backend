@@ -73,7 +73,6 @@ public class IngresoService {
         ingreso.setDescri(ingresodto.getDescri());
         ingreso.setFecha(ingresodto.getFecha());
         ingreso.setMonto(ingresodto.getMonto());
-        ingreso.setContado(false);
         ingreso.setUsuario(userEntity);
         ingreso.setCategoria(catIngreso);
 

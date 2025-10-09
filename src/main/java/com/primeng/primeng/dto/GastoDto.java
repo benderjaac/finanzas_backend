@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Setter
 public class GastoDto {
     public Long id;
-    public Boolean contado;
+    //public Boolean contado;
     public String descri;
     public LocalDate fecha;
     public Float monto;
@@ -21,7 +21,6 @@ public class GastoDto {
 
     public GastoDto(Gasto gasto){
         this.id = gasto.getId();
-        this.contado = gasto.getContado();
         this.descri = gasto.getDescri();
         this.fecha = gasto.getFecha();
         this.monto = gasto.getMonto();

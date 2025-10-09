@@ -32,9 +32,6 @@ public class Gasto {
     @JoinColumn(name = "categoria_id")
     private CategoriaGasto categoria;
 
-    @Column(nullable = false)
-    private Boolean contado;
-
     public Gasto(){}
 
 }
