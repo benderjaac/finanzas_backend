@@ -14,6 +14,7 @@ import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.repositories.IngresoRepository;
 import com.primeng.primeng.security.CustomUserDetails;
 import com.primeng.primeng.util.Type;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,7 +99,7 @@ public class IngresoService {
 
         return new IngresoDto(ingresoRepository.save(ingreso));
     }
-
+    @Transactional
     public void deleteIngreso(Long id) {
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
         int deleted = ingresoRepository.deleteByIdAndUsuarioId(id, usuario.getId());

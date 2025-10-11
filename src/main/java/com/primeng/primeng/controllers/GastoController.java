@@ -1,13 +1,11 @@
 package com.primeng.primeng.controllers;
 
-import com.primeng.primeng.dto.AhorroCreateDto;
-import com.primeng.primeng.dto.AhorroDto;
-import com.primeng.primeng.dto.GastoCreateDto;
-import com.primeng.primeng.dto.GastoDto;
+import com.primeng.primeng.dto.*;
 import com.primeng.primeng.models.Gasto;
 import com.primeng.primeng.models.ResponseApi;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.response.HttpOk;
+import com.primeng.primeng.services.BalanceUsuarioService;
 import com.primeng.primeng.services.GastoService;
 import com.primeng.primeng.util.Response;
 import com.primeng.primeng.util.Type;
@@ -25,6 +23,9 @@ public class GastoController {
 
     @Autowired
     private GastoService gastoService;
+
+    @Autowired
+    private BalanceUsuarioService balanceUsuarioService;
 
     private Response response = new Response(Type.GASTO);
 
@@ -50,14 +51,17 @@ public class GastoController {
     @PostMapping
     public ResponseEntity<HttpOk> createGasto(@RequestBody GastoCreateDto gasto) {
         GastoDto newGasto =  gastoService.createGasto(gasto);
-        return response.create(newGasto.getId().toString(), newGasto);
+        BalanceUsuarioDto balance = balanceUsuarioService.getByIdUsuario();
+
+        return response.create(newGasto.getId().toString(), balance);
     }
 
     @PreAuthorize("hasAuthority('gasto_select')")
     @PutMapping("/{id}")
     public ResponseEntity<HttpOk> updateGasto(@PathVariable Long id, @RequestBody GastoCreateDto gasto) {
-        GastoDto newGasto =  gastoService.updateGasto(id, gasto);
-        return response.update(newGasto.getId().toString());
+        GastoDto updateGasto =  gastoService.updateGasto(id, gasto);
+        BalanceUsuarioDto balance = balanceUsuarioService.getByIdUsuario();
+        return response.update(updateGasto.getId().toString(), balance);
     }
 
 
@@ -65,7 +69,8 @@ public class GastoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpOk> deleteGasto(@PathVariable Long id) {
         gastoService.deleteGasto(id);
-        return response.delete(id.toString());
+        BalanceUsuarioDto balance = balanceUsuarioService.getByIdUsuario();
+        return response.delete(id.toString(), balance);
     }
 
 

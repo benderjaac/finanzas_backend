@@ -1,5 +1,6 @@
 package com.primeng.primeng.util;
 
+import com.primeng.primeng.dto.BalanceUsuarioDto;
 import com.primeng.primeng.models.response.HttpOk;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class Response {
         HttpOk ok = new HttpOk(type.toString(), message, result);
         return ResponseEntity.ok(ok);
     }
-    
+
     public ResponseEntity<HttpOk> ok(String message) {
         return ok(message, new HashMap<>());
     }
@@ -45,16 +46,19 @@ public class Response {
         return ok("Información actualizada. " + type.idName() + ": " + id);
     }
 
+    public ResponseEntity<HttpOk> update(String id, Object result) {
+        return ok("Información actualizada. " + type.idName() + ": " + id, result);
+    }
+
     public ResponseEntity<HttpOk> update(Integer id) {
         return update(String.valueOf(id));
+    }
+
+    public ResponseEntity<HttpOk> delete(String id, Object result) {
+        return ok("Información eliminada. " + type.idName() + ": " + id, result);
     }
 
     public ResponseEntity<HttpOk> delete(String id) {
         return ok("Información eliminada. " + type.idName() + ": " + id);
     }
-
-    public ResponseEntity<HttpOk> delete(Integer id) {
-        return delete(String.valueOf(id));
-    }
-
 }

@@ -1,5 +1,6 @@
 package com.primeng.primeng.models.response;
 
+import com.primeng.primeng.dto.BalanceUsuarioDto;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

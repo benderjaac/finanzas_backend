@@ -9,6 +9,7 @@ public enum Type {
     CATEGORIAINGRESO("Categoria de ingreso", "Id Categoria"),
     AHORRO("Ahorro", "Id Ahorro"),
     AHORRODEPOSITO("Deposito", "Id Deposito"),
+    BALANCE_USUARIO("Balance", "Id Balance"),
     ;
 
     private String display;

@@ -15,6 +15,7 @@ import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.repositories.GastoRepository;
 import com.primeng.primeng.security.CustomUserDetails;
 import com.primeng.primeng.util.Type;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,9 +100,10 @@ public class GastoService {
 
         return new GastoDto(gastoRepository.save(gasto));
     }
-
+    @Transactional
     public void deleteGasto(Long id) {
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        System.out.println("idgasto"+id+" iduser"+usuario.getId());
         int deleted = gastoRepository.deleteByIdAndUsuarioId(id, usuario.getId());
         if (deleted == 0) {
             throw new NotFoundException(Type.GASTO, id);
