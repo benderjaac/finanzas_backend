@@ -1,11 +1,8 @@
 package com.primeng.primeng.services;
 
 import com.primeng.primeng.dto.*;
-import com.primeng.primeng.exceptions.BadRequestException;
 import com.primeng.primeng.exceptions.NotFoundException;
-import com.primeng.primeng.models.Ahorro;
 import com.primeng.primeng.models.CategoriaGasto;
-import com.primeng.primeng.models.Gasto;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.Catalogo;
 import com.primeng.primeng.models.db.Query;

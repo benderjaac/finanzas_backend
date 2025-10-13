@@ -1,6 +1,5 @@
 package com.primeng.primeng.dto;
 
-import com.primeng.primeng.models.Gasto;
 import com.primeng.primeng.models.Movimiento;
 import lombok.Getter;
 import lombok.Setter;

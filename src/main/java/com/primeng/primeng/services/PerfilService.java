@@ -1,6 +1,5 @@
 package com.primeng.primeng.services;
 
-import com.primeng.primeng.models.Gasto;
 import com.primeng.primeng.models.Perfil;
 import com.primeng.primeng.models.Permiso;
 import com.primeng.primeng.repositories.PerfilRepository;

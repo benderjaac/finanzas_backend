@@ -4,7 +4,6 @@ import com.primeng.primeng.dto.*;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.response.HttpOk;
 import com.primeng.primeng.services.BalanceUsuarioService;
-import com.primeng.primeng.services.GastoService;
 import com.primeng.primeng.services.MovimientoService;
 import com.primeng.primeng.util.Response;
 import com.primeng.primeng.util.Type;
@@ -26,7 +25,7 @@ public class MovimientoController {
 
     private Response response = new Response(Type.GASTO);
 
-    @PreAuthorize("hasAuthority('gasto_select')")
+    @PreAuthorize("hasAuthority('movimientos')")
     @PostMapping("/data")
     public ResponseEntity<HttpOk> findAll(
         HttpServletRequest request,
@@ -35,7 +34,7 @@ public class MovimientoController {
         return response.find(movimientoService.findAll(query));
     }
 
-    @PreAuthorize("hasAuthority('gasto_select')")
+    @PreAuthorize("hasAuthority('movimientos')")
     @GetMapping("/{id}")
     public ResponseEntity<HttpOk> getById(
             HttpServletRequest request,
@@ -44,7 +43,7 @@ public class MovimientoController {
         return response.find(movimientoService.getById(id));
     }
 
-    @PreAuthorize("hasAuthority('gasto_insert')")
+    @PreAuthorize("hasAuthority('movimientos')")
     @PostMapping
     public ResponseEntity<HttpOk> create(@RequestBody MovimientoCreateDto movimiento) {
         MovimientoDto newMovimiento =  movimientoService.create(movimiento);
@@ -53,7 +52,7 @@ public class MovimientoController {
         return response.create(newMovimiento.getId().toString(), balance);
     }
 
-    @PreAuthorize("hasAuthority('gasto_select')")
+    @PreAuthorize("hasAuthority('movimientos')")
     @PutMapping("/{id}")
     public ResponseEntity<HttpOk> update(@PathVariable Long id, @RequestBody MovimientoCreateDto movimiento) {
         MovimientoDto updateMovimiento =  movimientoService.update(id, movimiento);
@@ -62,7 +61,7 @@ public class MovimientoController {
     }
 
 
-
+    @PreAuthorize("hasAuthority('movimientos')")
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpOk> delete(@PathVariable Long id) {
         movimientoService.delete(id);

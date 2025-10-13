@@ -78,6 +78,7 @@ public class MovimientoService {
         movimiento.setDescri(movimientoCreatedto.getDescri());
         movimiento.setFecha(movimientoCreatedto.getFecha());
         movimiento.setMonto(movimientoCreatedto.getMonto());
+        movimiento.setTipo(movimientoCreatedto.getTipo());
         movimiento.setUsuario(userEntity);
         movimiento.setCategoria(catMovimiento);
 
@@ -99,7 +100,6 @@ public class MovimientoService {
         movimiento.setDescri(nuevoMovimiento.getDescri());
         movimiento.setMonto(nuevoMovimiento.getMonto());
         movimiento.setFecha(nuevoMovimiento.getFecha());
-        movimiento.setTipo(nuevoMovimiento.getTipo());
         movimiento.setCategoria(catMovimiento);
 
         return new MovimientoDto(movimientoRepository.save(movimiento));

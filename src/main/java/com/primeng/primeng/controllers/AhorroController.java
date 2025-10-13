@@ -2,9 +2,6 @@ package com.primeng.primeng.controllers;
 
 import com.primeng.primeng.dto.AhorroCreateDto;
 import com.primeng.primeng.dto.AhorroDto;
-import com.primeng.primeng.dto.GastoCreateDto;
-import com.primeng.primeng.dto.GastoDto;
-import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.response.HttpOk;
 import com.primeng.primeng.services.AhorroService;
 import com.primeng.primeng.util.Response;
