@@ -1,12 +1,12 @@
 package com.primeng.primeng.controllers;
 
-import com.primeng.primeng.dto.AhorroCreateDto;
 import com.primeng.primeng.dto.AhorroDepositoCreateDto;
 import com.primeng.primeng.dto.AhorroDepositoDto;
-import com.primeng.primeng.dto.AhorroDto;
+import com.primeng.primeng.dto.BalanceUsuarioDto;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.response.HttpOk;
 import com.primeng.primeng.services.AhorroDepositoService;
+import com.primeng.primeng.services.BalanceUsuarioService;
 import com.primeng.primeng.util.Response;
 import com.primeng.primeng.util.Type;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 public class AhorroDepositoController {
     @Autowired
     private AhorroDepositoService ahorroDepositoService;
+
+    @Autowired
+    private BalanceUsuarioService balanceUsuarioService;
 
     private Response response = new Response(Type.AHORRODEPOSITO);
 
@@ -40,7 +43,8 @@ public class AhorroDepositoController {
             @PathVariable Long id
     ) {
         AhorroDepositoDto newAhorroDeposito =  ahorroDepositoService.createAhorroDeposito(ahorroDeposito, id);
-        return response.create(newAhorroDeposito.getId().toString(), newAhorroDeposito);
+        BalanceUsuarioDto balance = balanceUsuarioService.getByIdUsuario();
+        return response.create(newAhorroDeposito.getId().toString(), balance);
     }
 
     @PreAuthorize("hasAuthority('ahorro_select')")
@@ -51,6 +55,18 @@ public class AhorroDepositoController {
             @PathVariable Long idDeposito
     ) {
         AhorroDepositoDto newAhorroDeposito =  ahorroDepositoService.updateAhorroDeposito(idDeposito,ahorroDeposito, idAhorro);
-        return response.update(newAhorroDeposito.getId().toString());
+        BalanceUsuarioDto balance = balanceUsuarioService.getByIdUsuario();
+        return response.update(newAhorroDeposito.getId().toString(), balance);
+    }
+
+    @PreAuthorize("hasAuthority('ahorro_select')")
+    @DeleteMapping("/{idAhorro:\\d+}/{idDeposito:\\d+}")
+    public ResponseEntity<HttpOk> deleteAhorroDeposito(
+            @PathVariable Long idAhorro,
+            @PathVariable Long idDeposito
+    ) {
+        ahorroDepositoService.deleteAhorroDeposito(idDeposito, idAhorro);
+        BalanceUsuarioDto balance = balanceUsuarioService.getByIdUsuario();
+        return response.delete(idDeposito.toString(), balance);
     }
 }

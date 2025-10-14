@@ -1,6 +1,5 @@
 package com.primeng.primeng.repositories;
 
-import com.primeng.primeng.models.Ahorro;
 import com.primeng.primeng.models.AhorroDeposito;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,5 +11,5 @@ public interface AhorroDepositoRepository extends JpaRepository<AhorroDeposito, 
 
     Optional<AhorroDeposito> findByIdAndAhorroIdAndAhorroUsuarioId(Long id, Long ahorroId, Long usuarioId);
 
-    int deleteByIdAndAhorroIdAndAhorroUsuarioId(Long id, Long ahorroId, Long usuarioId);
+    int deleteByIdAndAhorroId(Long id, Long ahorroId);
 }
