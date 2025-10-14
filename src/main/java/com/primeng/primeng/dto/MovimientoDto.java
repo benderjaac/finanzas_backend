@@ -25,7 +25,7 @@ public class MovimientoDto {
         this.tipo = movimiento.getTipo();
         this.fecha = movimiento.getFecha();
         this.monto = movimiento.getMonto();
-        CategoriaGastoDto categoria = new CategoriaGastoDto(movimiento.getCategoria());
+        CategoriaDto categoria = new CategoriaDto(movimiento.getCategoria());
         this.categoria_id = categoria.getId();
         this.categoriaNombre = categoria.getNombre();
         this.categoriaColor = categoria.getColor();

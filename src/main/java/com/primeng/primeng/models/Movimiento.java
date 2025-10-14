@@ -33,7 +33,7 @@ public class Movimiento {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id")
-    private CategoriaGasto categoria;
+    private Categoria categoria;
 
     public Movimiento(){}
 

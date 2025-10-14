@@ -4,12 +4,12 @@ import com.primeng.primeng.dto.MovimientoCreateDto;
 import com.primeng.primeng.dto.MovimientoDto;
 import com.primeng.primeng.exceptions.BadRequestException;
 import com.primeng.primeng.exceptions.NotFoundException;
-import com.primeng.primeng.models.CategoriaGasto;
+import com.primeng.primeng.models.Categoria;
 import com.primeng.primeng.models.Movimiento;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.db.Result;
-import com.primeng.primeng.repositories.CategoriaGastoRepository;
+import com.primeng.primeng.repositories.CategoriaRepository;
 import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.repositories.MovimientoRepository;
 import com.primeng.primeng.security.CustomUserDetails;
@@ -28,7 +28,7 @@ public class MovimientoService {
     private MovimientoRepository movimientoRepository;
 
     @Autowired
-    private CategoriaGastoRepository categoriaMovimientoRepository;
+    private CategoriaRepository categoriaMovimientoRepository;
 
     @Autowired
     private UserService userService;
@@ -67,7 +67,7 @@ public class MovimientoService {
 
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
         // Buscar la categoria
-        CategoriaGasto catMovimiento = categoriaMovimientoRepository.findByIdAndUsuarioId(movimientoCreatedto.getCategoriaId(), usuario.getId())
+        Categoria catMovimiento = categoriaMovimientoRepository.findByIdAndUsuarioId(movimientoCreatedto.getCategoriaId(), usuario.getId())
                 .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
 
 
@@ -94,7 +94,7 @@ public class MovimientoService {
         }
 
         // Buscar la categoria
-        CategoriaGasto catMovimiento = categoriaMovimientoRepository.findByIdAndUsuarioId(nuevoMovimiento.getCategoriaId(), usuario.getId())
+        Categoria catMovimiento = categoriaMovimientoRepository.findByIdAndUsuarioId(nuevoMovimiento.getCategoriaId(), usuario.getId())
                 .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
 
         movimiento.setDescri(nuevoMovimiento.getDescri());

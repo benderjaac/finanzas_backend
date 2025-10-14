@@ -2,12 +2,12 @@ package com.primeng.primeng.services;
 
 import com.primeng.primeng.dto.*;
 import com.primeng.primeng.exceptions.NotFoundException;
-import com.primeng.primeng.models.CategoriaGasto;
+import com.primeng.primeng.models.Categoria;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.Catalogo;
 import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.models.db.Result;
-import com.primeng.primeng.repositories.CategoriaGastoRepository;
+import com.primeng.primeng.repositories.CategoriaRepository;
 import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.security.CustomUserDetails;
 import com.primeng.primeng.util.Type;
@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class CategoriaGastoService {
+public class CategoriaService {
     @Autowired
-    private CategoriaGastoRepository categoriaGastoRepository;
+    private CategoriaRepository categoriaRepository;
 
     @Autowired
     private DBRepository db;
@@ -33,67 +33,67 @@ public class CategoriaGastoService {
     UserService userService;
 
     //categorias por query
-    public Result<CategoriaGastoDto> findAll(Query query){
-        Result<CategoriaGasto> result = db.findAll(CategoriaGasto.class, query, true);
-        List<CategoriaGastoDto> resultList = result.getData().stream()
-                .map(CategoriaGastoDto::new)
+    public Result<CategoriaDto> findAll(Query query){
+        Result<Categoria> result = db.findAll(Categoria.class, query, true);
+        List<CategoriaDto> resultList = result.getData().stream()
+                .map(CategoriaDto::new)
                 .collect(Collectors.toList());
         return new Result<>(resultList, result.getPagination());
     }
 
     //categorias como catalogo (todas)
-    public Catalogo<CategoriaGastoDto> findAll(){
+    public Catalogo<CategoriaDto> findAll(){
 
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
 
-        List<CategoriaGasto> result = categoriaGastoRepository.findByUsuarioIdAndVisibleTrue(usuario.getId());
+        List<Categoria> result = categoriaRepository.findByUsuarioIdAndVisibleTrue(usuario.getId());
 
-        List<CategoriaGastoDto> resultList = result.stream()
-                .map(CategoriaGastoDto::new)
+        List<CategoriaDto> resultList = result.stream()
+                .map(CategoriaDto::new)
                 .collect(Collectors.toList());
         return new Catalogo<>(resultList);
     }
 
     //categoria por id
-    public CategoriaGastoDto getByID(Long id){
+    public CategoriaDto getByID(Long id){
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
 
-        CategoriaGasto result = categoriaGastoRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.CATEGORIAGASTO, id));
-        return new CategoriaGastoDto(result);
+        Categoria result = categoriaRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.CATEGORIAGASTO, id));
+        return new CategoriaDto(result);
     }
 
-    public CategoriaGastoDto createCategoria(CategoriaGastoCreateDto catGastodto) {
+    public CategoriaDto createCategoria(CategoriaCreateDto catGastodto) {
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
         User userEntity = userService.getUserById(usuario.getId());
 
         // Crear entidad CategoriaGasto
-        CategoriaGasto categoriaGasto = new CategoriaGasto();
+        Categoria categoria = new Categoria();
 
-        categoriaGasto.setNombre(catGastodto.getNombre());
-        categoriaGasto.setDescri(catGastodto.getDescri());
-        categoriaGasto.setColor(catGastodto.getColor());
-        categoriaGasto.setIcon(catGastodto.getIcon());
-        categoriaGasto.setUsuario(userEntity);
-        categoriaGasto.setVisible(true);
+        categoria.setNombre(catGastodto.getNombre());
+        categoria.setDescri(catGastodto.getDescri());
+        categoria.setColor(catGastodto.getColor());
+        categoria.setIcon(catGastodto.getIcon());
+        categoria.setUsuario(userEntity);
+        categoria.setVisible(true);
 
-        return new CategoriaGastoDto(categoriaGastoRepository.save(categoriaGasto));
+        return new CategoriaDto(categoriaRepository.save(categoria));
     }
 
-    public CategoriaGastoDto updateCategoriaGasto(Long id, CategoriaGastoCreateDto nuevaCat){
+    public CategoriaDto updateCategoriaGasto(Long id, CategoriaCreateDto nuevaCat){
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
-        CategoriaGasto categoria = categoriaGastoRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.CATEGORIAGASTO, id));
+        Categoria categoria = categoriaRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.CATEGORIAGASTO, id));
 
         categoria.setDescri(nuevaCat.getDescri());
         categoria.setNombre(nuevaCat.getNombre());
         categoria.setColor(nuevaCat.getColor());
         categoria.setIcon(nuevaCat.getIcon());
 
-        return new CategoriaGastoDto(categoriaGastoRepository.save(categoria));
+        return new CategoriaDto(categoriaRepository.save(categoria));
     }
 
     public void deleteCategoriaGasto(Long id) {
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
-        int deleted = categoriaGastoRepository.deleteByIdAndUsuarioId(id, usuario.getId());
+        int deleted = categoriaRepository.deleteByIdAndUsuarioId(id, usuario.getId());
         if (deleted == 0) {
             throw new NotFoundException(Type.CATEGORIAGASTO, id);
         }

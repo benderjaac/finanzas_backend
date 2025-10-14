@@ -5,10 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="categorias_gasto")
+@Table(name="categorias")
 @Getter
 @Setter
-public class CategoriaGasto {
+public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,6 +18,9 @@ public class CategoriaGasto {
 
     @Column
     private String descri;
+
+    @Column
+    private String tipo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
