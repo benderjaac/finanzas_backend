@@ -1,12 +1,11 @@
 package com.primeng.primeng.services;
 
-import com.primeng.primeng.dto.AhorroCreateDto;
-import com.primeng.primeng.dto.AhorroDepositoCreateDto;
-import com.primeng.primeng.dto.AhorroDepositoDto;
+import com.primeng.primeng.dto.*;
 import com.primeng.primeng.dto.AhorroDepositoDto;
 import com.primeng.primeng.exceptions.NotFoundException;
 import com.primeng.primeng.models.Ahorro;
 import com.primeng.primeng.models.AhorroDeposito;
+import com.primeng.primeng.models.Movimiento;
 import com.primeng.primeng.models.User;
 import com.primeng.primeng.models.db.Catalogo;
 import com.primeng.primeng.models.db.Query;
@@ -20,6 +19,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +36,9 @@ public class AhorroDepositoService {
 
     @Autowired
     CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    MovimientoService movimientoService;
 
     public Result<AhorroDepositoDto> findAll(Query query, Long ahorroId){
 
@@ -57,14 +60,26 @@ public class AhorroDepositoService {
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
         Ahorro ahorro = ahorroRepository.findByIdAndUsuarioId(ahorroId, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.AHORRO, ahorroId));
 
+        MovimientoCreateDto movimientoCreatedto = new MovimientoCreateDto();
+        movimientoCreatedto.setMonto(ahorroDepositoCdto.getMonto()*-1);
+        movimientoCreatedto.setDescri(ahorroDepositoCdto.getMonto()<0?"Disposicion en ahorro: "+ahorro.getDescri():"Enviado a ahorro: "+ahorro.getDescri());
+        movimientoCreatedto.setFecha(ahorroDepositoCdto.getFecha());
+        movimientoCreatedto.setTipo(ahorroDepositoCdto.getMonto()<0?"Ingreso":"Gasto");
+        movimientoCreatedto.setCategoriaId((long)108);
+
+        Movimiento movimiento = movimientoService.createSimple(movimientoCreatedto);
+
         AhorroDeposito ahorroDeposito = new AhorroDeposito();
 
         ahorroDeposito.setDescri(ahorroDepositoCdto.getDescri());
         ahorroDeposito.setFecha(ahorroDepositoCdto.getFecha());
         ahorroDeposito.setMonto(ahorroDepositoCdto.getMonto());
         ahorroDeposito.setAhorro(ahorro);
+        ahorroDeposito.setMovimiento(movimiento);
 
         ahorroDepositoRepository.save(ahorroDeposito);
+
+
 
         return new AhorroDepositoDto(ahorroDeposito);
     }

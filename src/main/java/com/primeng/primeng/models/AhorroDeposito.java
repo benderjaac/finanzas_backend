@@ -27,4 +27,8 @@ public class AhorroDeposito {
 
     @Column(nullable = false)
     private String descri;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "movimiento_id")
+    private Movimiento movimiento;
 }
