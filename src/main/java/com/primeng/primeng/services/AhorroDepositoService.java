@@ -75,6 +75,7 @@ public class AhorroDepositoService {
         ahorroDeposito.setFecha(ahorroDepositoCdto.getFecha());
         ahorroDeposito.setMonto(ahorroDepositoCdto.getMonto());
         ahorroDeposito.setAhorro(ahorro);
+        ahorroDeposito.setTipo(ahorroDepositoCdto.getTipo());
         ahorroDeposito.setMovimiento(movimiento);
 
         ahorroDepositoRepository.save(ahorroDeposito);

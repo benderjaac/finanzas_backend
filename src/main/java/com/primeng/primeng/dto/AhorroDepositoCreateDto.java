@@ -11,5 +11,6 @@ import java.time.LocalDate;
 public class AhorroDepositoCreateDto {
     public LocalDate fecha;
     public String descri;
+    public String tipo;
     public Float monto;
 }

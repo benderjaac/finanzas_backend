@@ -13,6 +13,7 @@ public class AhorroDepositoDto {
     public Long id;
     public LocalDate fecha;
     public String descri;
+    public String tipo;
     public Float monto;
 
     public AhorroDepositoDto(AhorroDeposito ahorroDeposito){
@@ -20,5 +21,6 @@ public class AhorroDepositoDto {
         this.fecha = ahorroDeposito.getFecha();
         this.descri = ahorroDeposito.getDescri();
         this.monto = ahorroDeposito.getMonto();
+        this.tipo = ahorroDeposito.getTipo();
     }
 }
