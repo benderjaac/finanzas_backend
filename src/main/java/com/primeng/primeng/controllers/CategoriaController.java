@@ -47,6 +47,22 @@ public class CategoriaController {
         return response.find(categoriaService.findAll());
     }
 
+    @PreAuthorize("hasAuthority('categorias_select')")
+    @GetMapping("/catalogo/gastos")
+    public ResponseEntity<HttpOk> findAllGastos(
+            HttpServletRequest request
+    ){
+        return response.find(categoriaService.findAllTipo("Gasto"));
+    }
+
+    @PreAuthorize("hasAuthority('categorias_select')")
+    @GetMapping("/catalogo/ingresos")
+    public ResponseEntity<HttpOk> findAllIngresos(
+            HttpServletRequest request
+    ){
+        return response.find(categoriaService.findAllTipo("Ingreso"));
+    }
+
     @PreAuthorize("hasAuthority('categorias_insert')")
     @PostMapping
     public ResponseEntity<HttpOk> createCategoriaGasto(@RequestBody CategoriaCreateDto catGasto) {

@@ -10,6 +10,8 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
     List<Categoria> findByUsuarioIdAndVisibleTrue(Long usuarioId);
 
+    List<Categoria> findByUsuarioIdAndTipoAndVisibleTrue(Long usuarioId, String tipo);
+
     Optional<Categoria> findByIdAndUsuarioId(Long id, Long usuarioId);
 
     int deleteByIdAndUsuarioId(Long id, Long usuarioId);

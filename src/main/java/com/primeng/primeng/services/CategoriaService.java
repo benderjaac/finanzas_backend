@@ -54,6 +54,18 @@ public class CategoriaService {
         return new Catalogo<>(resultList);
     }
 
+    public Catalogo<CategoriaDto> findAllTipo(String tipo){
+
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+
+        List<Categoria> result = categoriaRepository.findByUsuarioIdAndTipoAndVisibleTrue(usuario.getId(), tipo);
+
+        List<CategoriaDto> resultList = result.stream()
+                .map(CategoriaDto::new)
+                .collect(Collectors.toList());
+        return new Catalogo<>(resultList);
+    }
+
     //categoria por id
     public CategoriaDto getByID(Long id){
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
