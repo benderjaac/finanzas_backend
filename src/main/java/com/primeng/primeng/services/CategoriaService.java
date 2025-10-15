@@ -85,6 +85,7 @@ public class CategoriaService {
         categoria.setDescri(catGastodto.getDescri());
         categoria.setColor(catGastodto.getColor());
         categoria.setIcon(catGastodto.getIcon());
+        categoria.setTipo(catGastodto.getTipo());
         categoria.setUsuario(userEntity);
         categoria.setVisible(true);
 
