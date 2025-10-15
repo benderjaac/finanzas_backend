@@ -56,7 +56,6 @@ public class MovimientoService {
     }
 
     public MovimientoDto create(MovimientoCreateDto movimientoCreatedto) {
-        // Validación de datos mínimos
         if (movimientoCreatedto.getCategoriaId() == null) {
             throw new BadRequestException("El ID de la categoria es obligatorio");
         }
@@ -66,14 +65,16 @@ public class MovimientoService {
         }
 
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
-        // Buscar la categoria
+
         Categoria catMovimiento = categoriaMovimientoRepository.findByIdAndUsuarioId(movimientoCreatedto.getCategoriaId(), usuario.getId())
                 .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
 
+        if(movimientoCreatedto.getTipo()!=catMovimiento.getTipo()){
+            throw new BadRequestException("La categoria no es del mismo tipo que el movimiento");
+        }
 
         User userEntity = userService.getUserById(usuario.getId());
 
-        // Crear entidad Movimiento
         Movimiento movimiento = new Movimiento();
         movimiento.setDescri(movimientoCreatedto.getDescri());
         movimiento.setFecha(movimientoCreatedto.getFecha());
@@ -88,14 +89,17 @@ public class MovimientoService {
     public MovimientoDto update(Long id, MovimientoCreateDto nuevoMovimiento){
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
         Movimiento movimiento = movimientoRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.MOVIMIENTO, id));
-        // Validación de datos mínimos
+
         if (nuevoMovimiento.getCategoriaId() == null) {
             throw new BadRequestException("El ID de la categoria es obligatorio");
         }
 
-        // Buscar la categoria
         Categoria catMovimiento = categoriaMovimientoRepository.findByIdAndUsuarioId(nuevoMovimiento.getCategoriaId(), usuario.getId())
                 .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
+
+        if(nuevoMovimiento.getTipo()!=catMovimiento.getTipo()){
+            throw new BadRequestException("La categoria no es del mismo tipo que el movimiento");
+        }
 
         movimiento.setDescri(nuevoMovimiento.getDescri());
         movimiento.setMonto(nuevoMovimiento.getMonto());
