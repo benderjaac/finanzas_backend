@@ -1,5 +1,6 @@
 package com.primeng.primeng.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

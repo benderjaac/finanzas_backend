@@ -66,11 +66,17 @@ public class MovimientoService {
 
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
 
-        Categoria catMovimiento = categoriaMovimientoRepository.findByIdAndUsuarioId(movimientoCreatedto.getCategoriaId(), usuario.getId())
-                .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
-
-        if(movimientoCreatedto.getTipo()!=catMovimiento.getTipo()){
-            throw new BadRequestException("La categoria no es del mismo tipo que el movimiento");
+        Categoria catMovimiento;
+        if(movimientoCreatedto.getCategoriaId()!=108){
+            catMovimiento = categoriaMovimientoRepository.findByIdAndUsuarioId(movimientoCreatedto.getCategoriaId(), usuario.getId())
+                    .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
+            System.out.println(movimientoCreatedto.getTipo()+"!="+catMovimiento.getTipo());
+            if(!movimientoCreatedto.getTipo().equals(catMovimiento.getTipo())){
+                throw new BadRequestException("La categoria no es del mismo tipo que el movimiento");
+            }
+        }else{
+            catMovimiento = categoriaMovimientoRepository.findById(movimientoCreatedto.getCategoriaId())
+                    .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
         }
 
         User userEntity = userService.getUserById(usuario.getId());
