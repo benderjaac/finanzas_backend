@@ -9,7 +9,9 @@ import java.util.Optional;
 public interface AhorroDepositoRepository extends JpaRepository<AhorroDeposito, Long> {
     List<AhorroDeposito> findByAhorroIdAndAhorroUsuarioId(Long ahorroId, Long usuarioId);
 
-    Optional<AhorroDeposito> findByIdAndAhorroIdAndAhorroUsuarioId(Long id, Long ahorroId, Long usuarioId);
+    //Optional<AhorroDeposito> findByIdAndAhorroIdAndAhorroUsuarioId(Long id, Long ahorroId, Long usuarioId);
+
+    Optional<AhorroDeposito> findByIdAndAhorroId(Long id, Long ahorroId);
 
     int deleteByIdAndAhorroId(Long id, Long ahorroId);
 }

@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,40 +57,9 @@ public class MovimientoService {
     }
 
     public MovimientoDto create(MovimientoCreateDto movimientoCreatedto) {
-        if (movimientoCreatedto.getCategoriaId() == null) {
-            throw new BadRequestException("El ID de la categoria es obligatorio");
-        }
+        Movimiento movimiento = createSimple(movimientoCreatedto);
 
-        if (movimientoCreatedto.getTipo() == null) {
-            throw new BadRequestException("El Tipo es obligatorio");
-        }
-
-        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
-
-        Categoria catMovimiento;
-        if(movimientoCreatedto.getCategoriaId()!=108){
-            catMovimiento = categoriaMovimientoRepository.findByIdAndUsuarioId(movimientoCreatedto.getCategoriaId(), usuario.getId())
-                    .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
-            System.out.println(movimientoCreatedto.getTipo()+"!="+catMovimiento.getTipo());
-            if(!movimientoCreatedto.getTipo().equals(catMovimiento.getTipo())){
-                throw new BadRequestException("La categoria no es del mismo tipo que el movimiento");
-            }
-        }else{
-            catMovimiento = categoriaMovimientoRepository.findById(movimientoCreatedto.getCategoriaId())
-                    .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
-        }
-
-        User userEntity = userService.getUserById(usuario.getId());
-
-        Movimiento movimiento = new Movimiento();
-        movimiento.setDescri(movimientoCreatedto.getDescri());
-        movimiento.setFecha(movimientoCreatedto.getFecha());
-        movimiento.setMonto(movimientoCreatedto.getMonto());
-        movimiento.setTipo(movimientoCreatedto.getTipo());
-        movimiento.setUsuario(userEntity);
-        movimiento.setCategoria(catMovimiento);
-
-        return new MovimientoDto(movimientoRepository.save(movimiento));
+        return new MovimientoDto(movimiento);
     }
 
     public Movimiento createSimple(MovimientoCreateDto movimientoCreatedto) {
@@ -151,6 +121,17 @@ public class MovimientoService {
 
         return new MovimientoDto(movimientoRepository.save(movimiento));
     }
+
+    public MovimientoDto updateMontoFecha(Long id, Float monto, LocalDate fecha){
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        Movimiento movimiento = movimientoRepository.findByIdAndUsuarioId(id, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.MOVIMIENTO, id));
+
+        movimiento.setMonto(monto);
+        movimiento.setFecha(fecha);
+
+        return new MovimientoDto(movimientoRepository.save(movimiento));
+    }
+
     @Transactional
     public void delete(Long id) {
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();

@@ -65,7 +65,7 @@ public class AhorroDepositoController {
             @PathVariable Long idAhorro,
             @PathVariable Long idDeposito
     ) {
-        ahorroDepositoService.deleteAhorroDeposito(idDeposito, idAhorro);
+        ahorroDepositoService.deleteAhorroDeposito(idAhorro, idDeposito);
         BalanceUsuarioDto balance = balanceUsuarioService.getByIdUsuario();
         return response.delete(idDeposito.toString(), balance);
     }

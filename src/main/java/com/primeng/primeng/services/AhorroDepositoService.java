@@ -91,6 +91,8 @@ public class AhorroDepositoService {
         Ahorro ahorro = ahorroRepository.findByIdAndUsuarioId(ahorroId, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.AHORRO, ahorroId));
 
         AhorroDeposito ahorroDeposito = ahorroDepositoRepository.findById(ahorroDepositoId).orElseThrow(() -> new NotFoundException(Type.AHORRODEPOSITO, ahorroDepositoId));
+        Long idMovimiento = ahorroDeposito.getMovimiento().getId();
+        movimientoService.updateMontoFecha(idMovimiento, ahorroDepositoCdto.getMonto()*-1, ahorroDepositoCdto.getFecha());
 
         ahorroDeposito.setDescri(ahorroDepositoCdto.getDescri());
         ahorroDeposito.setFecha(ahorroDepositoCdto.getFecha());
@@ -102,10 +104,14 @@ public class AhorroDepositoService {
     }
 
     @Transactional
-    public void deleteAhorroDeposito(Long ahorroDepositoId, Long ahorroId) {
+    public void deleteAhorroDeposito(Long ahorroId, Long ahorroDepositoId) {
 
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
         Ahorro ahorro = ahorroRepository.findByIdAndUsuarioId(ahorroId, usuario.getId()).orElseThrow(() -> new NotFoundException(Type.AHORRO, ahorroId));
+
+        AhorroDeposito ahorroDeposito = ahorroDepositoRepository.findByIdAndAhorroId(ahorroDepositoId, ahorroId).orElseThrow(() -> new NotFoundException(Type.AHORRODEPOSITO, ahorroDepositoId));;
+        Long idMovimiento = ahorroDeposito.getMovimiento().getId();
+        movimientoService.delete(idMovimiento);
 
         int deleted = ahorroDepositoRepository.deleteByIdAndAhorroId(ahorroDepositoId, ahorro.getId());
         if (deleted == 0) {
