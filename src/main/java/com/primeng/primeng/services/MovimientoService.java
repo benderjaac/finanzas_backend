@@ -110,7 +110,7 @@ public class MovimientoService {
         Categoria catMovimiento = categoriaMovimientoRepository.findByIdAndUsuarioId(nuevoMovimiento.getCategoriaId(), usuario.getId())
                 .orElseThrow(() -> new BadRequestException("Categoria no encontrada"));
 
-        if(nuevoMovimiento.getTipo()!=catMovimiento.getTipo()){
+        if(!nuevoMovimiento.getTipo().equals(catMovimiento.getTipo())){
             throw new BadRequestException("La categoria no es del mismo tipo que el movimiento");
         }
 
