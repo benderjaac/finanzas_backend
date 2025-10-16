@@ -11,6 +11,7 @@ public enum Type {
     AHORRO("Ahorro", "Id Ahorro"),
     AHORRODEPOSITO("Deposito", "Id Deposito"),
     BALANCE_USUARIO("Balance", "Id Balance"),
+    ESTADISTICA("Estadisticas", "Id estadistica"),
     ;
 
     private String display;
