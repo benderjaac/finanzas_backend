@@ -27,9 +27,10 @@ public class EstadisticasService {
     public Catalogo<MovimientoResumenMensualDto> getMovimientosTotalesMes(){
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
         Long usuarioId = usuario.getId();
-        List<MovimientoResumenMensualDto> result = movimientoRepository.obtenerTotalesPorMesYUsuario(usuarioId);
+        List<Object[]> result = movimientoRepository.obtenerTotalesPorMesYUsuario(usuarioId);
 
         List<MovimientoResumenMensualDto> resultList = result.stream()
+                .map(MovimientoResumenMensualDto::new)
                 .collect(Collectors.toList());
         return new Catalogo<>(resultList);
     }

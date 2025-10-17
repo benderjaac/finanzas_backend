@@ -19,8 +19,8 @@ public interface MovimientoRepository extends JpaRepository<Movimiento, Long> {
     @Query(value = """
     SELECT
         CAST(DATE_TRUNC('month', fecha) AS DATE) AS mes,
-        SUM(CASE WHEN tipo = 'Ingreso' THEN monto ELSE 0 END) AS totalIngresos,
-        SUM(CASE WHEN tipo = 'Gasto' THEN monto ELSE 0 END) AS totalGastos
+        SUM(CASE WHEN tipo = 'Ingreso' THEN monto ELSE 0 END) AS total_ingresos,
+        SUM(CASE WHEN tipo = 'Gasto' THEN monto ELSE 0 END) AS total_gastos
     FROM movimientos
     WHERE 
         usuario_id = :usuarioId
@@ -28,5 +28,5 @@ public interface MovimientoRepository extends JpaRepository<Movimiento, Long> {
     GROUP BY mes
     ORDER BY mes ASC
     """, nativeQuery = true)
-    List<MovimientoResumenMensualDto> obtenerTotalesPorMesYUsuario(@Param("usuarioId") Long usuarioId);
+    List<Object[]> obtenerTotalesPorMesYUsuario(@Param("usuarioId") Long usuarioId);
 }
