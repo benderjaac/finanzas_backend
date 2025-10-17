@@ -31,5 +31,12 @@ public class EstadisticasController {
         return response.find(estadisticasService.getMovimientosTotalesMes());
     }
 
+    @GetMapping("/gastos3meses")
+    public ResponseEntity<HttpOk> getGastos3Mese(
+            HttpServletRequest request
+    ){
+        return response.find(estadisticasService.getGastos3Mes());
+    }
+
 
 }

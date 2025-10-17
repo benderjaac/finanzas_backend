@@ -29,4 +29,15 @@ public interface MovimientoRepository extends JpaRepository<Movimiento, Long> {
     ORDER BY mes ASC
     """, nativeQuery = true)
     List<Object[]> obtenerTotalesPorMesYUsuario(@Param("usuarioId") Long usuarioId);
+
+    @Query(value = """
+    SELECT id, fecha, descri, (monto*-1) as monto, tipo, usuario_id, categoria_id
+    FROM movimientos
+    WHERE 
+        usuario_id = :usuarioId
+        AND fecha >= DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '3 months'
+        AND tipo = 'Gasto'
+    ORDER BY fecha ASC
+    """, nativeQuery = true)
+    List<Movimiento> getGastos3Mes(@Param("usuarioId") Long usuarioId);
 }

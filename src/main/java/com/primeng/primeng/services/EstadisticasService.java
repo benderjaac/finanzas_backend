@@ -1,9 +1,10 @@
 package com.primeng.primeng.services;
 
-import com.primeng.primeng.dto.CategoriaDto;
+import com.primeng.primeng.dto.MovimientoDto;
 import com.primeng.primeng.dto.MovimientoResumenMensualDto;
+import com.primeng.primeng.models.Movimiento;
 import com.primeng.primeng.models.db.Catalogo;
-import com.primeng.primeng.models.db.Result;
+import com.primeng.primeng.models.db.Query;
 import com.primeng.primeng.repositories.DBRepository;
 import com.primeng.primeng.repositories.MovimientoRepository;
 import com.primeng.primeng.security.CustomUserDetails;
@@ -31,6 +32,18 @@ public class EstadisticasService {
 
         List<MovimientoResumenMensualDto> resultList = result.stream()
                 .map(MovimientoResumenMensualDto::new)
+                .collect(Collectors.toList());
+        return new Catalogo<>(resultList);
+    }
+
+    public Catalogo<MovimientoDto> getGastos3Mes(){
+        CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
+        Long usuarioId = usuario.getId();
+
+        List<Movimiento> result = movimientoRepository.getGastos3Mes(usuarioId);
+
+        List<MovimientoDto> resultList = result.stream()
+                .map(MovimientoDto::new)
                 .collect(Collectors.toList());
         return new Catalogo<>(resultList);
     }
