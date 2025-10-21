@@ -3,6 +3,7 @@ package com.primeng.primeng.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -39,5 +40,9 @@ public class BalanceUsuario {
     public Float getBalanceTotal() {
         return (montoDisponible != null ? montoDisponible : 0f) +
                 (montoAhorrado != null ? montoAhorrado : 0f);
+    }
+
+    public LocalDate getFecha() {
+        return ultimaActualizacion != null ? ultimaActualizacion.toLocalDate() : null;
     }
 }
