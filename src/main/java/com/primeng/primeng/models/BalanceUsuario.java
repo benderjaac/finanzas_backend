@@ -17,7 +17,7 @@ public class BalanceUsuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private User usuario;
 

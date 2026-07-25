@@ -10,6 +10,7 @@ import com.primeng.primeng.models.db.Catalogo;
 import com.primeng.primeng.repositories.BalanceHistoricoRepository;
 import com.primeng.primeng.repositories.BalanceUsuarioRepository;
 import com.primeng.primeng.security.CustomUserDetails;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class BalanceUsuarioService {
     @Autowired
     UserService userService;
 
+    @Transactional
     public BalanceUsuarioDto getByIdUsuario(){
         CustomUserDetails usuario = customUserDetailsService.getUserLogueado();
 
@@ -60,9 +62,11 @@ public class BalanceUsuarioService {
 
     public BalanceHistorico createOrUpdateHistorico(BalanceUsuario balanceUsuario){
 
+        LocalDate fecha = balanceUsuario.getUltimaActualizacion().toLocalDate();
+
         Optional<BalanceHistorico> balanceHistorico = balanceHistoricoRepository.findByUsuarioIdAndFecha(
                 balanceUsuario.getUsuario().getId(),
-                balanceUsuario.getUltimaActualizacion().toLocalDate()
+                fecha
         );
 
         if(balanceHistorico.isPresent()){
@@ -71,7 +75,7 @@ public class BalanceUsuarioService {
             balanceHistoricoEntity.setMontoAhorrado(balanceUsuario.getMontoAhorrado());
             balanceHistoricoEntity.setMontoDisponible(balanceUsuario.getMontoDisponible());
             balanceHistoricoEntity.setMontoTotal(balanceUsuario.getBalanceTotal());
-            balanceHistoricoEntity.setFecha(balanceUsuario.getFecha());
+            balanceHistoricoEntity.setFecha(fecha);
 
             return balanceHistoricoRepository.save(balanceHistoricoEntity);
         }else{
@@ -80,7 +84,7 @@ public class BalanceUsuarioService {
             balanceHistoricoEntity.setMontoAhorrado(balanceUsuario.getMontoAhorrado());
             balanceHistoricoEntity.setMontoDisponible(balanceUsuario.getMontoDisponible());
             balanceHistoricoEntity.setMontoTotal(balanceUsuario.getBalanceTotal());
-            balanceHistoricoEntity.setFecha(balanceUsuario.getFecha());
+            balanceHistoricoEntity.setFecha(fecha);
 
             return balanceHistoricoRepository.save(balanceHistoricoEntity);
         }
